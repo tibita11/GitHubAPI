@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 class SearchViewController: UIViewController {
     private var searchBar: UISearchBar!
@@ -32,12 +34,15 @@ class SearchViewController: UIViewController {
     }()
     
     private let viewModel = SearchViewModel()
+    private let disposeBag = DisposeBag()
     
     
     // MARK: - View Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        setUpViewModel()
     }
     
     override func viewDidLayoutSubviews() {
@@ -50,7 +55,18 @@ class SearchViewController: UIViewController {
     // MARK: - Action
     
     private func setUpViewModel() {
-
+        // collectionView設定
+        collectionView.register(SearchHistoryCollectionViewCell.self,
+                                forCellWithReuseIdentifier: "searchHistoryCell")
+        viewModel.outputs.collectionViewItem
+            .drive(collectionView.rx.items(cellIdentifier: "searchHistoryCell",
+                                           cellType: SearchHistoryCollectionViewCell.self)) { row, element, cell in
+                cell.titleLabel.text = element
+            }
+            .disposed(by: disposeBag)
+        
+        // データ取得処理、バインド後に行う
+        viewModel.initialSetUp()
     }
     
     @objc private func tapClearButton() {
@@ -179,6 +195,11 @@ class SearchViewController: UIViewController {
     
     private func setUpCollectionView() {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = .systemGray6
+        let flowLayout = UICollectionViewFlowLayout()
+        flowLayout.itemSize = CGSize(width: self.view.bounds.width, height: 50)
+        flowLayout.minimumLineSpacing = 1.0
+        collectionView.collectionViewLayout = flowLayout
         self.view.addSubview(collectionView)
         
         NSLayoutConstraint.activate([
