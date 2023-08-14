@@ -8,8 +8,8 @@
 import UIKit
 
 class SearchHistoryCollectionViewCell: UICollectionViewCell {
-    private var searchButton: UIButton!
-    var titleLabel: UILabel!
+    private var searchButton: UIButton = UIButton()
+    var titleLabel: UILabel = UILabel()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -36,8 +36,23 @@ class SearchHistoryCollectionViewCell: UICollectionViewCell {
         setUpTitleLable()
     }
     
+    private func setUpTitleLable() {
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.contentView.addSubview(titleLabel)
+        // 自動計算される高さとコンフリクトしてしまうため、優先度を下げる
+        let heightConstraint = titleLabel.heightAnchor.constraint(equalToConstant: 50)
+        heightConstraint.priority = UILayoutPriority(999)
+        
+        NSLayoutConstraint.activate([
+            titleLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor),
+            titleLabel.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 30),
+            titleLabel.rightAnchor.constraint(equalTo: searchButton.leftAnchor),
+            titleLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
+            heightConstraint
+        ])
+    }
+    
     private func setUpSearchButton() {
-        searchButton = UIButton()
         searchButton.setImage(UIImage(systemName: "arrow.up.left"), for: .normal)
         searchButton.contentMode = .scaleAspectFit
         searchButton.addTarget(self, action: #selector(tapSearchButton), for: .touchUpInside)
@@ -49,20 +64,6 @@ class SearchHistoryCollectionViewCell: UICollectionViewCell {
             searchButton.rightAnchor.constraint(equalTo: self.contentView.rightAnchor),
             searchButton.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
             searchButton.widthAnchor.constraint(equalTo: searchButton.heightAnchor, multiplier: 1)
-        ])
-    }
-    
-    private func setUpTitleLable() {
-        titleLabel = UILabel()
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        self.contentView.addSubview(titleLabel)
-        
-        NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor),
-            titleLabel.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 30),
-            titleLabel.rightAnchor.constraint(equalTo: searchButton.leftAnchor),
-            titleLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
-            titleLabel.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
 }
