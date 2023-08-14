@@ -59,6 +59,14 @@ class SearchViewController: UIViewController {
     private func configureCollectionView() {
         var configuration = UICollectionLayoutListConfiguration(appearance: .plain)
         configuration.backgroundColor = .systemGray6
+        configuration.trailingSwipeActionsConfigurationProvider = { indexPath in
+            let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] action, view, completion in
+                guard let self else { return }
+                viewModel.deleteSearchHistory(row: indexPath.row)
+                completion(true)
+            }
+            return UISwipeActionsConfiguration(actions: [deleteAction])
+        }
         let layout = UICollectionViewCompositionalLayout.list(using: configuration)
         collectionView = UICollectionView(frame: .null, collectionViewLayout: layout)
     }

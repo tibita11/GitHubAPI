@@ -46,6 +46,16 @@ class SearchViewModel: SearchViewModelType {
         snapshot.accept(getSnapshot())
     }
     
+    func deleteSearchHistory(row: Int) {
+        guard var searchHistory = userDefaults.array(forKey: Const.searchHistoryKey) as? [String] else {
+            assertionFailure("Error: Failed to get DB")
+            return
+        }
+        searchHistory.remove(at: row)
+        userDefaults.set(searchHistory, forKey: Const.searchHistoryKey)
+        snapshot.accept(getSnapshot())
+    }
+    
     private func getSnapshot() -> NSDiffableDataSourceSnapshot<SearchHistorySection, SearchHistory.ID> {
         var snapshot = NSDiffableDataSourceSnapshot<SearchHistorySection, SearchHistory.ID>()
         snapshot.appendSections([.main])
