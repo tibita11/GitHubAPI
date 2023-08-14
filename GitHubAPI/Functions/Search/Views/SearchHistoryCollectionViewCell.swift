@@ -2,14 +2,14 @@
 //  SearchHistoryCollectionViewCell.swift
 //  GitHubAPI
 //
-//  Created by 鈴木楓香 on 2023/08/13.
+//  Created by 鈴木楓香 on 2023/08/14.
 //
 
 import UIKit
 
 class SearchHistoryCollectionViewCell: UICollectionViewCell {
+    private var searchButton: UIButton!
     var titleLabel: UILabel!
-    var searchButton: UIButton!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -24,7 +24,7 @@ class SearchHistoryCollectionViewCell: UICollectionViewCell {
     // MARK: - Action
     
     @objc private func tapSearchButton() {
-
+        
     }
     
     // MARK: - Layout
@@ -61,7 +61,8 @@ class SearchHistoryCollectionViewCell: UICollectionViewCell {
             titleLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor),
             titleLabel.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 30),
             titleLabel.rightAnchor.constraint(equalTo: searchButton.leftAnchor),
-            titleLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor)
+            titleLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
+            titleLabel.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
 }

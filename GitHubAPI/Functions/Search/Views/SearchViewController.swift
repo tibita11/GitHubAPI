@@ -9,13 +9,24 @@ import UIKit
 import RxSwift
 import RxCocoa
 
+struct SearchHistory: Identifiable {
+    var id: UUID
+    var title: String
+}
+
 class SearchViewController: UIViewController {
+    
+    enum Section {
+        case main
+    }
+    
     private var searchBar: UISearchBar!
     private let searchHistoryCollectionHeaderView = UIView()
     private let introductionView = UIView()
     private var introductionViewTopConstraint: NSLayoutConstraint!
-    private let collectionView = UICollectionView(frame: .zero,
-                                                  collectionViewLayout: UICollectionViewLayout())
+    private var collectionView: UICollectionView!
+    private var dataSource: UICollectionViewDiffableDataSource<Section, SearchHistory.ID>!
+    private var repository: SearchHistoryRepository = .init()
     
     private var heightToNavBar: CGFloat {
         var height: CGFloat = 0
@@ -55,17 +66,6 @@ class SearchViewController: UIViewController {
     // MARK: - Action
     
     private func setUpViewModel() {
-        // collectionView設定
-        collectionView.register(SearchHistoryCollectionViewCell.self,
-                                forCellWithReuseIdentifier: "searchHistoryCell")
-        viewModel.outputs.collectionViewItem
-            .drive(collectionView.rx.items(cellIdentifier: "searchHistoryCell",
-                                           cellType: SearchHistoryCollectionViewCell.self)) { row, element, cell in
-                cell.titleLabel.text = element
-            }
-            .disposed(by: disposeBag)
-        
-        // データ取得処理、バインド後に行う
         viewModel.initialSetUp()
     }
     
@@ -96,6 +96,8 @@ class SearchViewController: UIViewController {
         setUpSearchHistoryCollectionHeaderView()
         setUpIntroductionView()
         setUpCollectionView()
+        setUpCollectionDataSource()
+        applySnapshot()
     }
     
     private func setUpSearchBar() {
@@ -194,12 +196,12 @@ class SearchViewController: UIViewController {
     }
     
     private func setUpCollectionView() {
+        var configuration = UICollectionLayoutListConfiguration(appearance: .plain)
+        configuration.backgroundColor = .systemGray6
+        let layout = UICollectionViewCompositionalLayout.list(using: configuration)
+        collectionView = UICollectionView(frame: .null, collectionViewLayout: layout)
+        
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.backgroundColor = .systemGray6
-        let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.itemSize = CGSize(width: self.view.bounds.width, height: 50)
-        flowLayout.minimumLineSpacing = 1.0
-        collectionView.collectionViewLayout = flowLayout
         self.view.addSubview(collectionView)
         
         NSLayoutConstraint.activate([
@@ -209,6 +211,27 @@ class SearchViewController: UIViewController {
             collectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor,
                                                    constant: -heightToTabBar)
         ])
+    }
+    
+    private func setUpCollectionDataSource() {
+        let searchHistoryCellRegistration = UICollectionView.CellRegistration<SearchHistoryCollectionViewCell, SearchHistory> { cell, indexPath, searchHistory in
+            cell.titleLabel.text = searchHistory.title
+        }
+        
+        dataSource = UICollectionViewDiffableDataSource(
+            collectionView: collectionView,
+            cellProvider: { [weak self] collectionView, indexPath, itemIdentifier in
+                let searchHistory = self?.repository.searchHistory(id: itemIdentifier)
+                return collectionView.dequeueConfiguredReusableCell(using: searchHistoryCellRegistration, for: indexPath, item: searchHistory)
+            })
+    }
+    
+    private func applySnapshot() {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, SearchHistory.ID>()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(repository.searchHistoryIDs, toSection: .main)
+        
+        dataSource.apply(snapshot, animatingDifferences: true)
     }
 }
 
