@@ -9,32 +9,60 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-class SearchViewModel {
+enum SearchHistorySection {
+    case main
+}
+
+struct SearchHistory: Identifiable {
+    var id: UUID
+    var title: String
+}
+
+protocol SearchViewModelOutputs {
+    var application: Driver<NSDiffableDataSourceSnapshot<SearchHistorySection, SearchHistory.ID>> { get }
+}
+
+protocol SearchViewModelType {
+    var outputs: SearchViewModelOutputs { get }
+}
+
+class SearchViewModel: SearchViewModelType {
+    var outputs: SearchViewModelOutputs { self }
     private let userDefaults = UserDefaults.standard
-    private var observer: NSKeyValueObservation?
+    private var repository: SearchHistoryRepository = .init()
+    private let snapshot = PublishRelay<NSDiffableDataSourceSnapshot<SearchHistorySection, SearchHistory.ID>>()
+
     
     // MARK: - Action
     
-    func initialSetUp() {
-        observer = userDefaults.observe(
-            \.searchHistory,
-             options: [.initial, .new],
-             changeHandler: { userDefaults, changeValue in
-                 // UserDefaultsが変更した際の処理
-             })
+    func setUp() {
+        snapshot.accept(getSnapshot())
     }
     
     func saveSearchHistory(value: String) {
         let searchHistory = userDefaults.array(forKey: Const.searchHistoryKey) as? [String] ?? []
         let updatedHistory = searchHistory + [value]
         userDefaults.set(updatedHistory, forKey: Const.searchHistoryKey)
+        snapshot.accept(getSnapshot())
+    }
+    
+    private func getSnapshot() -> NSDiffableDataSourceSnapshot<SearchHistorySection, SearchHistory.ID> {
+        var snapshot = NSDiffableDataSourceSnapshot<SearchHistorySection, SearchHistory.ID>()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(repository.searchHistoryIDs, toSection: .main)
+        return snapshot
+    }
+    
+    func getSearchHistory(id: SearchHistory.ID) -> SearchHistory? {
+        return repository.searchHistory(id: id)
     }
 }
 
-// MARK: - UserDefaults
 
-extension UserDefaults {
-    @objc dynamic var searchHistory: [String] {
-        return array(forKey: Const.searchHistoryKey) as? [String] ?? []
+// MARK: - SearchViewModelOutputs
+
+extension SearchViewModel: SearchViewModelOutputs {
+    var application: Driver<NSDiffableDataSourceSnapshot<SearchHistorySection, SearchHistory.ID>> {
+        snapshot.asDriver(onErrorDriveWith: .empty())
     }
 }

@@ -9,24 +9,13 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-struct SearchHistory: Identifiable {
-    var id: UUID
-    var title: String
-}
-
 class SearchViewController: UIViewController {
-    
-    enum Section {
-        case main
-    }
-    
     private var searchBar: UISearchBar!
     private let searchHistoryCollectionHeaderView = UIView()
     private let introductionView = UIView()
     private var introductionViewTopConstraint: NSLayoutConstraint!
     private var collectionView: UICollectionView!
-    private var dataSource: UICollectionViewDiffableDataSource<Section, SearchHistory.ID>!
-    private var repository: SearchHistoryRepository = .init()
+    private var dataSource: UICollectionViewDiffableDataSource<SearchHistorySection, SearchHistory.ID>!
     
     private var heightToNavBar: CGFloat {
         var height: CGFloat = 0
@@ -53,6 +42,8 @@ class SearchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        configureCollectionView()
+        configureCollectionViewDataSource()
         setUpViewModel()
     }
     
@@ -65,8 +56,35 @@ class SearchViewController: UIViewController {
     
     // MARK: - Action
     
+    private func configureCollectionView() {
+        var configuration = UICollectionLayoutListConfiguration(appearance: .plain)
+        configuration.backgroundColor = .systemGray6
+        let layout = UICollectionViewCompositionalLayout.list(using: configuration)
+        collectionView = UICollectionView(frame: .null, collectionViewLayout: layout)
+    }
+    
+    private func configureCollectionViewDataSource() {
+        let searchHistoryCellRegistration = UICollectionView.CellRegistration<SearchHistoryCollectionViewCell, SearchHistory> { cell, indexPath, searchHistory in
+            cell.titleLabel.text = searchHistory.title
+        }
+        
+        dataSource = UICollectionViewDiffableDataSource(
+            collectionView: collectionView,
+            cellProvider: { [weak self] collectionView, indexPath, itemIdentifier in
+                let searchHistory = self?.viewModel.getSearchHistory(id: itemIdentifier)
+                return collectionView.dequeueConfiguredReusableCell(using: searchHistoryCellRegistration, for: indexPath, item: searchHistory)
+            })
+    }
+    
     private func setUpViewModel() {
-        viewModel.initialSetUp()
+        viewModel.outputs.application
+            .drive(onNext: { [weak self] snapshot in
+                guard let self else { return }
+                dataSource.apply(snapshot, animatingDifferences: true)
+            })
+            .disposed(by: disposeBag)
+        // 初期データを入れるため、バインド後に実行
+        viewModel.setUp()
     }
     
     @objc private func tapClearButton() {
@@ -96,8 +114,6 @@ class SearchViewController: UIViewController {
         setUpSearchHistoryCollectionHeaderView()
         setUpIntroductionView()
         setUpCollectionView()
-        setUpCollectionDataSource()
-        applySnapshot()
     }
     
     private func setUpSearchBar() {
@@ -196,11 +212,6 @@ class SearchViewController: UIViewController {
     }
     
     private func setUpCollectionView() {
-        var configuration = UICollectionLayoutListConfiguration(appearance: .plain)
-        configuration.backgroundColor = .systemGray6
-        let layout = UICollectionViewCompositionalLayout.list(using: configuration)
-        collectionView = UICollectionView(frame: .null, collectionViewLayout: layout)
-        
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(collectionView)
         
@@ -211,27 +222,6 @@ class SearchViewController: UIViewController {
             collectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor,
                                                    constant: -heightToTabBar)
         ])
-    }
-    
-    private func setUpCollectionDataSource() {
-        let searchHistoryCellRegistration = UICollectionView.CellRegistration<SearchHistoryCollectionViewCell, SearchHistory> { cell, indexPath, searchHistory in
-            cell.titleLabel.text = searchHistory.title
-        }
-        
-        dataSource = UICollectionViewDiffableDataSource(
-            collectionView: collectionView,
-            cellProvider: { [weak self] collectionView, indexPath, itemIdentifier in
-                let searchHistory = self?.repository.searchHistory(id: itemIdentifier)
-                return collectionView.dequeueConfiguredReusableCell(using: searchHistoryCellRegistration, for: indexPath, item: searchHistory)
-            })
-    }
-    
-    private func applySnapshot() {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, SearchHistory.ID>()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(repository.searchHistoryIDs, toSection: .main)
-        
-        dataSource.apply(snapshot, animatingDifferences: true)
     }
 }
 

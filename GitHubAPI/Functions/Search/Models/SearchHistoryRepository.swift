@@ -8,13 +8,35 @@
 import Foundation
 
 class SearchHistoryRepository {
-    private var searchHistories: [SearchHistory] = (UserDefaults.standard.array(forKey: Const.searchHistoryKey) as? [String] ?? []).map { title in
-        SearchHistory(id: UUID(), title: title)
+    private var observer: NSKeyValueObservation?
+    private var searchHistories: [SearchHistory]!
+    var searchHistoryIDs: [SearchHistory.ID] { searchHistories.map { $0.id }}
+    
+    init() {
+        observer = UserDefaults.standard.observe(
+            \.searchHistory,
+             options: [.initial, .new],
+             changeHandler: { [weak self] userDefaults, changeValue in
+                 guard let self else { return }
+                 searchHistories = (changeValue.newValue ?? []).map { title in
+                     SearchHistory(id: UUID(), title: title)
+                 }
+             })
     }
     
-    var searchHistoryIDs: [SearchHistory.ID] { searchHistories.map { $0.id }}
+    
+    // MARK: - Action
     
     func searchHistory(id: SearchHistory.ID) -> SearchHistory? {
         searchHistories.first(where: { $0.id == id })
+    }
+}
+
+
+// MARK: - UserDefaults
+
+extension UserDefaults {
+    @objc dynamic var searchHistory: [String] {
+        return array(forKey: Const.searchHistoryKey) as? [String] ?? []
     }
 }
