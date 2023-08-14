@@ -56,6 +56,11 @@ class SearchViewModel: SearchViewModelType {
         snapshot.accept(getSnapshot())
     }
     
+    func clearSearchHistory() {
+        userDefaults.removeObject(forKey: Const.searchHistoryKey)
+        snapshot.accept(getSnapshot())
+    }
+    
     private func getSnapshot() -> NSDiffableDataSourceSnapshot<SearchHistorySection, SearchHistory.ID> {
         var snapshot = NSDiffableDataSourceSnapshot<SearchHistorySection, SearchHistory.ID>()
         snapshot.appendSections([.main])

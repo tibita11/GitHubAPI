@@ -13,7 +13,12 @@ class SearchViewController: UIViewController {
     private var searchBar: UISearchBar!
     private let searchHistoryCollectionHeaderView = UIView()
     private let introductionView = UIView()
-    private var introductionViewTopConstraint: NSLayoutConstraint!
+    private lazy var introductionViewInitialTopConstraint: NSLayoutConstraint = {
+        introductionView.topAnchor.constraint(equalTo: searchHistoryCollectionHeaderView.bottomAnchor)
+    }()
+    private lazy var introductionViewMovedTopConstraint: NSLayoutConstraint = {
+        introductionView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: heightToNavBar)
+    }()
     private var collectionView: UICollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<SearchHistorySection, SearchHistory.ID>!
     
@@ -44,13 +49,18 @@ class SearchViewController: UIViewController {
         
         configureCollectionView()
         configureCollectionViewDataSource()
-        setUpViewModel()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
         _ = initViewLayout
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        setUpViewModel()
     }
     
     
@@ -86,9 +96,12 @@ class SearchViewController: UIViewController {
     
     private func setUpViewModel() {
         viewModel.outputs.application
+            .do { [weak self] snapshot in
+                self?.showCollectionView(bool: snapshot.numberOfItems != 0)
+            }
             .drive(onNext: { [weak self] snapshot in
                 guard let self else { return }
-                dataSource.apply(snapshot, animatingDifferences: true)
+               dataSource.apply(snapshot, animatingDifferences: true)
             })
             .disposed(by: disposeBag)
         // 初期データを入れるため、バインド後に実行
@@ -96,8 +109,12 @@ class SearchViewController: UIViewController {
     }
     
     @objc private func tapClearButton() {
-        introductionViewTopConstraint.isActive = false
-        introductionView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: heightToNavBar).isActive = true
+        viewModel.clearSearchHistory()
+    }
+    
+    private func showCollectionView(bool: Bool) {
+        introductionViewInitialTopConstraint.isActive = bool
+        introductionViewMovedTopConstraint.isActive = !bool
         
         UIView.animate(withDuration: 0.5, delay: 0) { [weak self] in
             guard let self else { return }
@@ -106,9 +123,9 @@ class SearchViewController: UIViewController {
         
         UIView.animate(withDuration: 0.5, delay: 0) { [weak self] in
             guard let self else { return }
-            introductionView.alpha = 1
-            searchHistoryCollectionHeaderView.alpha = 0
-            collectionView.alpha = 0
+            introductionView.alpha = bool ? 0 : 1
+            searchHistoryCollectionHeaderView.alpha = bool ? 1 : 0
+            collectionView.alpha = bool ? 1 : 0
         }
     }
     
@@ -208,10 +225,7 @@ class SearchViewController: UIViewController {
         introductionView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(introductionView)
         
-        introductionViewTopConstraint = introductionView.topAnchor.constraint(equalTo: searchHistoryCollectionHeaderView.bottomAnchor)
-        
         NSLayoutConstraint.activate([
-            introductionViewTopConstraint,
             introductionView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
             introductionView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
             introductionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor,
