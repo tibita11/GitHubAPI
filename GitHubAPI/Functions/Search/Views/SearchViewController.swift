@@ -12,16 +12,14 @@ import RxCocoa
 class SearchViewController: UIViewController {
     private var searchBar: UISearchBar!
     private let searchHistoryCollectionHeaderView = UIView()
+
     private let introductionView = UIView()
-    private lazy var introductionViewInitialTopConstraint: NSLayoutConstraint = {
-        introductionView.topAnchor.constraint(equalTo: searchHistoryCollectionHeaderView.bottomAnchor)
-    }()
-    private lazy var introductionViewMovedTopConstraint: NSLayoutConstraint = {
-        introductionView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: heightToNavBar)
-    }()
+    private var introductionViewInitialTopConstraint: NSLayoutConstraint!
+    private var introductionViewMovedTopConstraint: NSLayoutConstraint!
+    
     private var collectionView: UICollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<SearchHistorySection, SearchHistory.ID>!
-    
+
     private var heightToNavBar: CGFloat {
         var height: CGFloat = 0
         if let navigationController = self.parent?.navigationController {
@@ -46,9 +44,6 @@ class SearchViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        configureCollectionView()
-        configureCollectionViewDataSource()
     }
     
     override func viewDidLayoutSubviews() {
@@ -65,34 +60,6 @@ class SearchViewController: UIViewController {
     
     
     // MARK: - Action
-    
-    private func configureCollectionView() {
-        var configuration = UICollectionLayoutListConfiguration(appearance: .plain)
-        configuration.backgroundColor = .systemGray6
-        configuration.trailingSwipeActionsConfigurationProvider = { indexPath in
-            let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] action, view, completion in
-                guard let self else { return }
-                viewModel.deleteSearchHistory(row: indexPath.row)
-                completion(true)
-            }
-            return UISwipeActionsConfiguration(actions: [deleteAction])
-        }
-        let layout = UICollectionViewCompositionalLayout.list(using: configuration)
-        collectionView = UICollectionView(frame: .null, collectionViewLayout: layout)
-    }
-    
-    private func configureCollectionViewDataSource() {
-        let searchHistoryCellRegistration = UICollectionView.CellRegistration<SearchHistoryCollectionViewCell, SearchHistory> { cell, indexPath, searchHistory in
-            cell.titleLabel.text = searchHistory.title
-        }
-        
-        dataSource = UICollectionViewDiffableDataSource(
-            collectionView: collectionView,
-            cellProvider: { [weak self] collectionView, indexPath, itemIdentifier in
-                let searchHistory = self?.viewModel.getSearchHistory(id: itemIdentifier)
-                return collectionView.dequeueConfiguredReusableCell(using: searchHistoryCellRegistration, for: indexPath, item: searchHistory)
-            })
-    }
     
     private func setUpViewModel() {
         viewModel.outputs.application
@@ -112,9 +79,16 @@ class SearchViewController: UIViewController {
         viewModel.clearSearchHistory()
     }
     
+    /// CollectionViewの表示・非表示をanimationを使用して切り替える
     private func showCollectionView(bool: Bool) {
-        introductionViewInitialTopConstraint.isActive = bool
-        introductionViewMovedTopConstraint.isActive = !bool
+        // コンフリクトを起こす可能性があるので、isActiveの設定を明示的な順序で行う
+        if bool {
+            introductionViewInitialTopConstraint.isActive = !bool
+            introductionViewMovedTopConstraint.isActive = bool
+        } else {
+            introductionViewMovedTopConstraint.isActive = !bool
+            introductionViewInitialTopConstraint.isActive = bool
+        }
         
         UIView.animate(withDuration: 0.5, delay: 0) { [weak self] in
             guard let self else { return }
@@ -139,6 +113,7 @@ class SearchViewController: UIViewController {
         setUpSearchHistoryCollectionHeaderView()
         setUpIntroductionView()
         setUpCollectionView()
+        setUpCollectionViewDataSource()
     }
     
     private func setUpSearchBar() {
@@ -234,8 +209,24 @@ class SearchViewController: UIViewController {
     }
     
     private func setUpCollectionView() {
+        var configuration = UICollectionLayoutListConfiguration(appearance: .plain)
+        configuration.backgroundColor = .systemGray6
+        configuration.trailingSwipeActionsConfigurationProvider = { indexPath in
+            let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] action, view, completion in
+                guard let self else { return }
+                viewModel.deleteSearchHistory(row: indexPath.row)
+                completion(true)
+            }
+            return UISwipeActionsConfiguration(actions: [deleteAction])
+        }
+        let layout = UICollectionViewCompositionalLayout.list(using: configuration)
+        collectionView = UICollectionView(frame: .null, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(collectionView)
+        
+        // animationを実行するため、プロパティとして保持する
+        introductionViewInitialTopConstraint = introductionView.topAnchor.constraint(equalTo: searchHistoryCollectionHeaderView.bottomAnchor)
+        introductionViewMovedTopConstraint = introductionView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: heightToNavBar)
         
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: searchHistoryCollectionHeaderView.bottomAnchor),
@@ -244,6 +235,19 @@ class SearchViewController: UIViewController {
             collectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor,
                                                    constant: -heightToTabBar)
         ])
+    }
+    
+    private func setUpCollectionViewDataSource() {
+        let searchHistoryCellRegistration = UICollectionView.CellRegistration<SearchHistoryCollectionViewCell, SearchHistory> { cell, indexPath, searchHistory in
+            cell.titleLabel.text = searchHistory.title
+        }
+        
+        dataSource = UICollectionViewDiffableDataSource(
+            collectionView: collectionView,
+            cellProvider: { [weak self] collectionView, indexPath, itemIdentifier in
+                let searchHistory = self?.viewModel.getSearchHistory(id: itemIdentifier)
+                return collectionView.dequeueConfiguredReusableCell(using: searchHistoryCellRegistration, for: indexPath, item: searchHistory)
+            })
     }
 }
 
