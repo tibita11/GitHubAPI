@@ -262,6 +262,11 @@ extension SearchViewController: UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let text = searchBar.text else { return }
+        let vc = SearchResultViewController(searchWord: text)
+        self.parent?.navigationController?.pushViewController(vc, animated: true)
+        
+        searchBar.text = ""
+        searchBar.resignFirstResponder()
         viewModel.saveSearchHistory(value: text)
     }
 }
