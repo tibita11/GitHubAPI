@@ -10,21 +10,9 @@ import RxSwift
 import RxCocoa
 
 
-enum SearchResultSection {
-    case main
-}
-
-struct SearchResult: Identifiable {
-    let id: UUID
-    let ownerName: String
-    let repositoryName: String
-    let about: String
-    let starCount: String
-    let language: String
-}
-
 protocol SearchResultViewModelOutputs {
-    var application: Driver<NSDiffableDataSourceSnapshot<SearchResultSection, SearchResult.ID>> { get }
+    var application: Driver<[Repository]> { get }
+    var retryView: Driver<Bool> { get }
 }
 
 protocol SearchResultViewModelType {
@@ -33,35 +21,52 @@ protocol SearchResultViewModelType {
 
 class SearchResultViewModel: SearchResultViewModelType {
     var outputs: SearchResultViewModelOutputs { self }
-    private var repository: SearchResultRepository = .init()
-    private let snapshot = PublishRelay<NSDiffableDataSourceSnapshot<SearchResultSection, SearchResult.ID>>()
+    private let searchRsults = PublishRelay<[Repository]>()
+    private let isRetry = PublishRelay<Bool>()
+
     
     
     // MARK: - Action
     
-    func setUp() {
-        snapshot.accept(getSnaphot())
+    func setUp(searchWord: String) {
+        search(searchWord: searchWord)
     }
     
-    func getSearchResult(id: SearchResult.ID) -> SearchResult? {
-        return repository.getSearchResult(id: id)
+    func search(searchWord: String) {
+        isRetry.accept(false)
+        // MEMO: API通信を行い、結果をバインドする
+        Task {
+            do {
+                let repositories = try await APIRequestManager().getRepository(
+                    perPage: 1,
+                    searchword: searchWord
+                )
+                searchRsults.accept(repositories.items)
+            } catch let error as APIError {
+                // MEMO: 変更がないとみなし、処理を行わない
+                if error == .notModified {
+                    return
+                }
+                // MEMO: 再試行ボタンを表示する
+                isRetry.accept(true)
+            } catch {
+                // MEMO: 再試行ボタンを表示する
+                isRetry.accept(true)
+            }
+        }
     }
-    
-    private func getSnaphot() -> NSDiffableDataSourceSnapshot<SearchResultSection, SearchResult.ID> {
-        var snapshot = NSDiffableDataSourceSnapshot<SearchResultSection, SearchResult.ID>()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(repository.searchResultIDs, toSection: .main)
-        return snapshot
-    }
-    
-    
 }
 
 
 // MARK: - SearchResultViewModelOutputs
 
 extension SearchResultViewModel: SearchResultViewModelOutputs {
-    var application: Driver<NSDiffableDataSourceSnapshot<SearchResultSection, SearchResult.ID>> {
-        snapshot.asDriver(onErrorDriveWith: .empty())
+    var application: Driver<[Repository]> {
+        searchRsults.asDriver(onErrorDriveWith: .empty())
     }
+    
+    var retryView: Driver<Bool> {
+        isRetry.asDriver(onErrorDriveWith: .empty())
+    }
+    
 }
