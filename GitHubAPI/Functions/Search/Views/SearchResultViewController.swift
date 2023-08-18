@@ -8,6 +8,7 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import Kingfisher
 
 class SearchResultViewController: UIViewController {
     
@@ -138,9 +139,11 @@ class SearchResultViewController: UIViewController {
     }
     
     private func setUpDataSource() {
+        
         let searchResultCellRegistration = UICollectionView.CellRegistration<SearchResultCollectionViewCell, Repository> { cell, indexPath, result in
             cell.repositoryNameLabel.text = result.name
             cell.ownerNameLabel.text = result.owner.login
+            cell.ownerImageView.kf.setImage(with: URL(string: result.owner.avatarURL))
             cell.aboutLabel.text = result.description
             cell.starCountLabel.text = String(result.starCount)
             cell.languageLabel.text = result.language

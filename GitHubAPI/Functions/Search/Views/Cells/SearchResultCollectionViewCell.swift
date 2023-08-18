@@ -98,7 +98,8 @@ class SearchResultCollectionViewCell: UICollectionViewCell {
 
     private func setUpOwnerImageView() {
         ownerImageView.translatesAutoresizingMaskIntoConstraints = false
-        ownerImageView.image = UIImage(systemName: "apple.logo")
+        ownerImageView.layer.cornerRadius = 5
+        ownerImageView.layer.masksToBounds = true
         ownerImageView.contentMode = .scaleAspectFit
         
         NSLayoutConstraint.activate([
