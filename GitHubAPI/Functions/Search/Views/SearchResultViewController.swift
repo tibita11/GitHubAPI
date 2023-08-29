@@ -68,6 +68,8 @@ class SearchResultViewController: UIViewController {
     
     private func setUpViewModel() {
         viewModel.outputs.application
+            // MEMO: 初期値はスキップ
+            .skip(1)
             .do { [weak self] repositories in
                 // MEMO: 検索結果が0の場合はViewを表示する
                 if repositories.first == nil {
@@ -89,7 +91,7 @@ class SearchResultViewController: UIViewController {
             })
             .disposed(by: disposeBag)
         // MEMO: 初期データ取得のためバインド後に実行
-        viewModel.setUp(searchWord: self.searchWord)
+        viewModel.search(searchWord: self.searchWord)
     }
 
     private func showNoDataWarnigView() {
@@ -127,6 +129,7 @@ class SearchResultViewController: UIViewController {
         let configuration = UICollectionLayoutListConfiguration(appearance: .plain)
         let layout = UICollectionViewCompositionalLayout.list(using: configuration)
         collectionView = UICollectionView(frame: .null, collectionViewLayout: layout)
+        collectionView.delegate = self
         
         self.view.addSubview(collectionView)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -224,5 +227,20 @@ class SearchResultViewController: UIViewController {
             stackView.centerYAnchor.constraint(equalTo: retryView.centerYAnchor),
             stackView.centerXAnchor.constraint(equalTo: retryView.centerXAnchor)
         ])
+    }
+}
+
+
+// MARK: - UICollectionViewDelegate
+
+extension SearchResultViewController: UICollectionViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let currentOffsetY = scrollView.contentOffset.y
+        let maximumOffset = scrollView.contentSize.height - scrollView.frame.height
+        let distanceToBottom = maximumOffset - currentOffsetY
+        
+        if distanceToBottom < 500 {
+            viewModel.search(searchWord: self.searchWord)
+        }
     }
 }
