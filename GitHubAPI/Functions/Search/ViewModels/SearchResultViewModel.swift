@@ -75,6 +75,11 @@ class SearchResultViewModel: SearchResultViewModelType {
             }
         }
     }
+    
+    func getRepository(row: Int) -> Repository {
+        let value = searchResults.value
+        return value[row]
+    }
 }
 
 

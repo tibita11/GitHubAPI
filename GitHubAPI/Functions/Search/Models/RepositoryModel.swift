@@ -20,6 +20,7 @@ struct Repository: Hashable, Decodable {
     let name: String
     let owner: Owner
     let description: String?
+    let forks: Int
     let starCount: Int
     let language: String?
     
@@ -28,6 +29,7 @@ struct Repository: Hashable, Decodable {
         case name
         case owner
         case description
+        case forks
         case starCount = "stargazers_count"
         case language
     }

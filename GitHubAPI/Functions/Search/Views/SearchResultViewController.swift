@@ -21,9 +21,10 @@ class SearchResultViewController: UIViewController {
     private var dataSource: UICollectionViewDiffableDataSource<RepositorySection, Repository>!
     private let viewModel = SearchResultViewModel()
     private let disposeBag = DisposeBag()
-    
+    // MEMO: 初期化時のみ実行する処理
     private lazy var initViewLayout: Void = {
         setUpLayout()
+        setUpViewModel()
     }()
     
     private var heightToNavBar: CGFloat {
@@ -59,8 +60,6 @@ class SearchResultViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        setUpViewModel()
     }
     
     
@@ -242,5 +241,13 @@ extension SearchResultViewController: UICollectionViewDelegate {
         if distanceToBottom < 500 {
             viewModel.search(searchWord: self.searchWord)
         }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        // MEMO: タップした行の詳細を表示する
+        let repository = viewModel.getRepository(row: indexPath.row)
+        let vc = RepositoryDetailViewController(repository: repository)
+        self.navigationController?.pushViewController(vc, animated: true)
+        collectionView.deselectItem(at: indexPath, animated: true)
     }
 }

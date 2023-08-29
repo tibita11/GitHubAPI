@@ -18,7 +18,13 @@ class SearchResultCollectionViewCell: UICollectionViewCell {
     let aboutLabel = UILabel()
     let starCountLabel = UILabel()
     let languageLabel = UILabel()
-
+    
+    override var isSelected: Bool {
+        // MEMO: 選択時の色を変える
+        didSet {
+            contentView.backgroundColor = isSelected ? .systemGray6 : .systemBackground
+        }
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
