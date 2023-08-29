@@ -75,6 +75,14 @@ class SearchViewModel: SearchViewModelType {
     func getSearchHistory(id: SearchHistory.ID) -> SearchHistory? {
         return repository.searchHistory(id: id)
     }
+    
+    func getSearchWord(row: Int) -> String? {
+        guard let searchHistory = userDefaults.array(forKey: Const.searchHistoryKey) as? [String] else {
+            assertionFailure("Error: Failed to get DB")
+            return nil
+        }
+        return searchHistory[row]
+    }
 }
 
 

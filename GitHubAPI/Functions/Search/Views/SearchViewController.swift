@@ -221,6 +221,7 @@ class SearchViewController: UIViewController {
         }
         let layout = UICollectionViewCompositionalLayout.list(using: configuration)
         collectionView = UICollectionView(frame: .null, collectionViewLayout: layout)
+        collectionView.delegate = self
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(collectionView)
         
@@ -268,5 +269,20 @@ extension SearchViewController: UISearchBarDelegate {
         searchBar.text = ""
         searchBar.resignFirstResponder()
         viewModel.saveSearchHistory(value: text)
+    }
+}
+
+
+// MARK: - UICollectionViewDelegate
+
+extension SearchViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        // MEMO: タップしたWordでAPI検索処理開始
+        guard let searchWord = viewModel.getSearchWord(row: indexPath.row) else {
+            return
+        }
+        let vc = SearchResultViewController(searchWord: searchWord)
+        self.parent?.navigationController?.pushViewController(vc, animated: true)
+        collectionView.deselectItem(at: indexPath, animated: true)
     }
 }

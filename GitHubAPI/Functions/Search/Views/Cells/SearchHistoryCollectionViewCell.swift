@@ -8,8 +8,15 @@
 import UIKit
 
 class SearchHistoryCollectionViewCell: UICollectionViewCell {
-    private var searchButton: UIButton = UIButton()
-    var titleLabel: UILabel = UILabel()
+    private var imageView = UIImageView()
+    var titleLabel = UILabel()
+    
+    override var isSelected: Bool {
+        // MEMO: 選択時の色を変える
+        didSet {
+            contentView.backgroundColor = isSelected ? .systemGray6 : .systemBackground
+        }
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -21,18 +28,12 @@ class SearchHistoryCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Action
-    
-    @objc private func tapSearchButton() {
-        
-    }
-    
     // MARK: - Layout
     
     private func setUpLayout() {
         self.contentView.backgroundColor = .systemBackground
         
-        setUpSearchButton()
+        setUpImageView()
         setUpTitleLable()
     }
     
@@ -46,24 +47,23 @@ class SearchHistoryCollectionViewCell: UICollectionViewCell {
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor),
             titleLabel.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 30),
-            titleLabel.rightAnchor.constraint(equalTo: searchButton.leftAnchor),
+            titleLabel.rightAnchor.constraint(equalTo: imageView.leftAnchor),
             titleLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
             heightConstraint
         ])
     }
     
-    private func setUpSearchButton() {
-        searchButton.setImage(UIImage(systemName: "arrow.up.left"), for: .normal)
-        searchButton.contentMode = .scaleAspectFit
-        searchButton.addTarget(self, action: #selector(tapSearchButton), for: .touchUpInside)
-        searchButton.translatesAutoresizingMaskIntoConstraints = false
-        self.contentView.addSubview(searchButton)
+    private func setUpImageView() {
+        imageView.image = UIImage(systemName: "arrow.up.left")
+        imageView.contentMode = .center
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        self.contentView.addSubview(imageView)
         
         NSLayoutConstraint.activate([
-            searchButton.topAnchor.constraint(equalTo: self.contentView.topAnchor),
-            searchButton.rightAnchor.constraint(equalTo: self.contentView.rightAnchor),
-            searchButton.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
-            searchButton.widthAnchor.constraint(equalTo: searchButton.heightAnchor, multiplier: 1)
+            imageView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
+            imageView.rightAnchor.constraint(equalTo: self.contentView.rightAnchor),
+            imageView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
+            imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor, multiplier: 1)
         ])
     }
 }
