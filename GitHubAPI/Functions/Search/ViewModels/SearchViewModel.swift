@@ -41,6 +41,10 @@ class SearchViewModel: SearchViewModelType {
     
     func saveSearchHistory(value: String) {
         let searchHistory = userDefaults.array(forKey: Const.searchHistoryKey) as? [String] ?? []
+        // MEMO: すでに登録済みの場合、何もしない
+        guard !searchHistory.contains(value) else {
+            return
+        }
         let updatedHistory = searchHistory + [value]
         userDefaults.set(updatedHistory, forKey: Const.searchHistoryKey)
         snapshot.accept(getSnapshot())
