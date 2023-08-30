@@ -12,6 +12,7 @@
 		A5669FA22A9E0EC1008CA1E4 /* RepositoryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5669FA12A9E0EC1008CA1E4 /* RepositoryDetailViewController.swift */; };
 		A5669FA42A9EE900008CA1E4 /* ReadmeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5669FA32A9EE900008CA1E4 /* ReadmeModel.swift */; };
 		A5669FA62A9EEC4F008CA1E4 /* RepositoryDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5669FA52A9EEC4F008CA1E4 /* RepositoryDetailViewModel.swift */; };
+		A5669FA82A9F7176008CA1E4 /* SearchHistoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5669FA72A9F7176008CA1E4 /* SearchHistoryManager.swift */; };
 		A57E7D942A89F16F00F13FF9 /* SearchHistoryCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A57E7D932A89F16E00F13FF9 /* SearchHistoryCollectionViewCell.swift */; };
 		A57E7D962A89F2DF00F13FF9 /* SearchHistoryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A57E7D952A89F2DF00F13FF9 /* SearchHistoryRepository.swift */; };
 		A5832AAD2A8BC0BC005C5A89 /* SearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5832AAC2A8BC0BC005C5A89 /* SearchResultViewController.swift */; };
@@ -60,6 +61,7 @@
 		A5669FA12A9E0EC1008CA1E4 /* RepositoryDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryDetailViewController.swift; sourceTree = "<group>"; };
 		A5669FA32A9EE900008CA1E4 /* ReadmeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadmeModel.swift; sourceTree = "<group>"; };
 		A5669FA52A9EEC4F008CA1E4 /* RepositoryDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryDetailViewModel.swift; sourceTree = "<group>"; };
+		A5669FA72A9F7176008CA1E4 /* SearchHistoryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchHistoryManager.swift; sourceTree = "<group>"; };
 		A57E7D932A89F16E00F13FF9 /* SearchHistoryCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchHistoryCollectionViewCell.swift; sourceTree = "<group>"; };
 		A57E7D952A89F2DF00F13FF9 /* SearchHistoryRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchHistoryRepository.swift; sourceTree = "<group>"; };
 		A5832AAC2A8BC0BC005C5A89 /* SearchResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewController.swift; sourceTree = "<group>"; };
@@ -241,6 +243,7 @@
 		A5898EDD2A887F760033BA86 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				A5669FA72A9F7176008CA1E4 /* SearchHistoryManager.swift */,
 				A57E7D952A89F2DF00F13FF9 /* SearchHistoryRepository.swift */,
 				A5832AB52A8CD9D4005C5A89 /* APIRequestManager.swift */,
 				A5832AB72A8E5F2C005C5A89 /* RepositoryModel.swift */,
@@ -503,6 +506,7 @@
 				A5898EE02A887F990033BA86 /* SearchViewModel.swift in Sources */,
 				A5832AAF2A8BC666005C5A89 /* SearchResultViewModel.swift in Sources */,
 				A5669FA42A9EE900008CA1E4 /* ReadmeModel.swift in Sources */,
+				A5669FA82A9F7176008CA1E4 /* SearchHistoryManager.swift in Sources */,
 				A5669FA22A9E0EC1008CA1E4 /* RepositoryDetailViewController.swift in Sources */,
 				A5898ED22A876B080033BA86 /* SearchViewController.swift in Sources */,
 				A5898EA22A8764690033BA86 /* AppDelegate.swift in Sources */,

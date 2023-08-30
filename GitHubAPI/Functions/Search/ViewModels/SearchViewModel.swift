@@ -31,6 +31,7 @@ class SearchViewModel: SearchViewModelType {
     private let userDefaults = UserDefaults.standard
     private var repository: SearchHistoryRepository = .init()
     private let snapshot = PublishRelay<NSDiffableDataSourceSnapshot<SearchHistorySection, SearchHistory.ID>>()
+    private let searchHistoryManager = SearchHistoryManager()
 
     
     // MARK: - Action
@@ -40,28 +41,28 @@ class SearchViewModel: SearchViewModelType {
     }
     
     func saveSearchHistory(value: String) {
-        let searchHistory = userDefaults.array(forKey: Const.searchHistoryKey) as? [String] ?? []
-        // MEMO: すでに登録済みの場合、何もしない
-        guard !searchHistory.contains(value) else {
-            return
+        if let searchHistory = searchHistoryManager.getSearchHistory() {
+            // MEMO: 重複がある場合、何もしない
+            guard !searchHistory.contains(value) else {
+                return
+            }
+            // MEMO: 配列を保存
+            let newValue = searchHistory + [value]
+            searchHistoryManager.saveSearchHistory(value: newValue)
+        } else {
+            // MEMO: 登録がない場合、そのまま保存
+            searchHistoryManager.saveSearchHistory(value: [value])
         }
-        let updatedHistory = searchHistory + [value]
-        userDefaults.set(updatedHistory, forKey: Const.searchHistoryKey)
         snapshot.accept(getSnapshot())
     }
     
     func deleteSearchHistory(row: Int) {
-        guard var searchHistory = userDefaults.array(forKey: Const.searchHistoryKey) as? [String] else {
-            assertionFailure("Error: Failed to get DB")
-            return
-        }
-        searchHistory.remove(at: row)
-        userDefaults.set(searchHistory, forKey: Const.searchHistoryKey)
+        searchHistoryManager.deleteSearchHistory(row: row)
         snapshot.accept(getSnapshot())
     }
     
     func clearSearchHistory() {
-        userDefaults.removeObject(forKey: Const.searchHistoryKey)
+        searchHistoryManager.deleteAllSearchHistory()
         snapshot.accept(getSnapshot())
     }
     
