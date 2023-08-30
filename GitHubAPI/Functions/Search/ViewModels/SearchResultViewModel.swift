@@ -21,6 +21,7 @@ private enum LoadStatus {
 protocol SearchResultViewModelOutputs {
     var application: Driver<[Repository]> { get }
     var retryView: Driver<Bool> { get }
+    var isLoading: Driver<Bool> { get }
 }
 
 protocol SearchResultViewModelType {
@@ -33,8 +34,7 @@ class SearchResultViewModel: SearchResultViewModelType {
     private let isRetry = PublishRelay<Bool>()
     private var pageCount = 1
     private var loadStatus: LoadStatus = .initial
-
-    
+    private let isLoadingRelay = PublishRelay<Bool>()
     
     // MARK: - Action
     
@@ -45,6 +45,10 @@ class SearchResultViewModel: SearchResultViewModelType {
         }
         loadStatus = .fetching
         isRetry.accept(false)
+        // MEMO: 今のカウント数が0の場合、ローディング画面を表示する
+        if searchResults.value.first == nil {
+            isLoadingRelay.accept(true)
+        }
         // MEMO: API通信を行い、結果をバインドする
         Task {
             do {
@@ -55,6 +59,7 @@ class SearchResultViewModel: SearchResultViewModelType {
                 // MEMO: 新しく取得したデータは既存データに追加する
                 var oldValue = searchResults.value
                 oldValue += repositories.items
+                isLoadingRelay.accept(false)
                 searchResults.accept(oldValue)
                 pageCount += 1
                 // MEMO: nullの場合すでにデータが表示されているとみなす
@@ -66,10 +71,12 @@ class SearchResultViewModel: SearchResultViewModelType {
                     return
                 }
                 // MEMO: 再試行ボタンを表示する
+                isLoadingRelay.accept(false)
                 isRetry.accept(true)
                 loadStatus = .error
             } catch {
                 // MEMO: 再試行ボタンを表示する
+                isLoadingRelay.accept(false)
                 isRetry.accept(true)
                 loadStatus = .error
             }
@@ -94,4 +101,7 @@ extension SearchResultViewModel: SearchResultViewModelOutputs {
         isRetry.asDriver(onErrorDriveWith: .empty())
     }
     
+    var isLoading: Driver<Bool> {
+        isLoadingRelay.asDriver(onErrorDriveWith: .empty())
+    }
 }

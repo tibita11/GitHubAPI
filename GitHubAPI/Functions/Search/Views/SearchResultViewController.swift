@@ -19,6 +19,7 @@ class SearchResultViewController: UIViewController {
     private var retryView: UIView!
     private var collectionView: UICollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<RepositorySection, Repository>!
+    private var activityIndicatorView: UIActivityIndicatorView!
     private let viewModel = SearchResultViewModel()
     private let disposeBag = DisposeBag()
     // MEMO: 初期化時のみ実行する処理
@@ -89,6 +90,13 @@ class SearchResultViewController: UIViewController {
                 self?.showRetryView(isRetry)
             })
             .disposed(by: disposeBag)
+        // MEMO: ローディング画面を表示するか否か
+        viewModel.outputs.isLoading
+            .drive(onNext: { [weak self] bool in
+                self?.changeActivityIndicatiorStatus(bool)
+            })
+            .disposed(by: disposeBag)
+        
         // MEMO: 初期データ取得のためバインド後に実行
         viewModel.search(searchWord: self.searchWord)
     }
@@ -112,22 +120,30 @@ class SearchResultViewController: UIViewController {
         viewModel.search(searchWord: self.searchWord)
     }
     
+    /// trueの場合、表示して動かす・falseの場合、非表示して止める
+    private func changeActivityIndicatiorStatus(_ bool: Bool) {
+        activityIndicatorView.isHidden = !bool
+        bool ? activityIndicatorView.startAnimating() : activityIndicatorView.stopAnimating()
+    }
+    
     
     // MARK: - Layout
     
     private func setUpLayout() {
-        self.view.backgroundColor = .systemBackground
+        self.view.backgroundColor = .systemGray6
         
         setUpCollectionView()
         setUpDataSource()
         setUpNoDataWarnigView()
         setUpRetryView()
+        setUpActivityIndicatorView()
     }
     
     private func setUpCollectionView() {
         let configuration = UICollectionLayoutListConfiguration(appearance: .plain)
         let layout = UICollectionViewCompositionalLayout.list(using: configuration)
         collectionView = UICollectionView(frame: .null, collectionViewLayout: layout)
+        collectionView.backgroundColor = .clear
         collectionView.delegate = self
         
         self.view.addSubview(collectionView)
@@ -225,6 +241,18 @@ class SearchResultViewController: UIViewController {
         NSLayoutConstraint.activate([
             stackView.centerYAnchor.constraint(equalTo: retryView.centerYAnchor),
             stackView.centerXAnchor.constraint(equalTo: retryView.centerXAnchor)
+        ])
+    }
+    
+    private func setUpActivityIndicatorView() {
+        activityIndicatorView = UIActivityIndicatorView()
+        activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicatorView.isHidden = true
+        self.view.addSubview(activityIndicatorView)
+        
+        NSLayoutConstraint.activate([
+            activityIndicatorView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            activityIndicatorView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor)
         ])
     }
 }
