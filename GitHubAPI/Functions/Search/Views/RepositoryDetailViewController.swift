@@ -7,6 +7,9 @@
 
 import UIKit
 import Kingfisher
+import WebKit
+import RxSwift
+import RxCocoa
 
 class RepositoryDetailViewController: UIViewController {
     
@@ -21,6 +24,9 @@ class RepositoryDetailViewController: UIViewController {
     private let countStackView = UIStackView()
     private let starStackView = UIStackView()
     private let forkStackView = UIStackView()
+    private var webView: WKWebView!
+    private var viewModel: RepositoryDetailViewModel!
+    private let disposeBag = DisposeBag()
     
     private var heightToNavBar: CGFloat {
         var height: CGFloat = 0
@@ -57,8 +63,26 @@ class RepositoryDetailViewController: UIViewController {
         _ = initViewLayout
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        setUpViewModel()
+    }
+    
     // MARK: - Action
     
+    private func setUpViewModel() {
+        viewModel = RepositoryDetailViewModel()
+        // MEMO: URLをwebViewに反映
+        viewModel.outputs.urlDriver
+            .drive(onNext: { [weak self] urlString in
+                guard let self, let url = URL(string: urlString) else { return }
+                webView.load(URLRequest(url: url))
+            })
+            .disposed(by: disposeBag)
+        // MEMO: データ取得
+        viewModel.getReadme(owner: repository.owner.login, repo: repository.name)
+    }
     
     // MARK: - Layout
     
@@ -75,6 +99,7 @@ class RepositoryDetailViewController: UIViewController {
         setUpCountStackView()
         setUpStarStackView()
         setUpForkStackView()
+        setUpReadmeView()
     }
     
     private func setUpRepositoryView() {
@@ -222,6 +247,35 @@ class RepositoryDetailViewController: UIViewController {
             imageView.leadingAnchor.constraint(equalTo: forkStackView.leadingAnchor),
             imageView.bottomAnchor.constraint(equalTo: forkStackView.bottomAnchor),
             imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor, multiplier: 1)
+        ])
+    }
+    
+    private func setUpReadmeView() {
+        let label = UILabel()
+        label.text = "README"
+        label.textAlignment = .left
+        label.textColor = .systemGray
+        label.font = Const.textFont
+        label.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(label)
+        
+        NSLayoutConstraint.activate([
+            label.topAnchor.constraint(equalTo: repositoryView.bottomAnchor),
+            label.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 10),
+            label.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            label.heightAnchor.constraint(equalToConstant: 50)
+        ])
+        
+        let config = WKWebViewConfiguration()
+        webView = WKWebView(frame: .zero, configuration: config)
+        webView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(webView)
+        
+        NSLayoutConstraint.activate([
+            webView.topAnchor.constraint(equalTo: label.bottomAnchor),
+            webView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            webView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            webView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
     }
 }

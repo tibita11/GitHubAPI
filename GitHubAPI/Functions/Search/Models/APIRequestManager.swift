@@ -15,10 +15,12 @@ enum APIError: LocalizedError {
     case notModified
     case serviceUnavailable
     case unknownError
+    case resurceNotFound
 }
 
 protocol APIRequestManagerProtocol {
     func getRepository(perPage: Int, searchword: String) async throws -> RepositoryList
+    func getReadme(owner: String, repo: String) async throws -> Readme
 }
 
 class APIRequestManager {
@@ -40,6 +42,8 @@ class APIRequestManager {
             }
         case 304:
             throw APIError.notModified
+        case 404:
+            throw APIError.resurceNotFound
         case 422:
             throw APIError.validationFailed
         case 503:
@@ -69,4 +73,17 @@ extension APIRequestManager: APIRequestManagerProtocol {
         let request = URLRequest(url: url)
         return try await handleSessionTask(RepositoryList.self, request: request)
     }
+    
+    func getReadme(owner: String, repo: String) async throws -> Readme {
+        // MRMO: urlの作成
+        let urlString = "https://api.github.com/repos/\(owner)/\(repo)/readme"
+        // MEMO: urlが作成できないケースを認識するため、デバッグ時にアプリを落とす
+        guard let url = URL(string: urlString) else {
+            assertionFailure("Error: can't convert to url")
+            throw APIError.unknownError
+        }
+        let request = URLRequest(url: url)
+        return try await handleSessionTask(Readme.self, request: request)
+    }
+    
 }

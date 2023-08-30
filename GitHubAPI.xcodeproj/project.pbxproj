@@ -10,6 +10,8 @@
 		5D8376819643C2C4E6A6AF0C /* Pods_GitHubAPI_GitHubAPIUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D9E6A53393AD6A73DE5E637 /* Pods_GitHubAPI_GitHubAPIUITests.framework */; };
 		6BF0B506CE4B00ABCD026D51 /* Pods_GitHubAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FB93B11FFCD9B37B9D730D0 /* Pods_GitHubAPI.framework */; };
 		A5669FA22A9E0EC1008CA1E4 /* RepositoryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5669FA12A9E0EC1008CA1E4 /* RepositoryDetailViewController.swift */; };
+		A5669FA42A9EE900008CA1E4 /* ReadmeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5669FA32A9EE900008CA1E4 /* ReadmeModel.swift */; };
+		A5669FA62A9EEC4F008CA1E4 /* RepositoryDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5669FA52A9EEC4F008CA1E4 /* RepositoryDetailViewModel.swift */; };
 		A57E7D942A89F16F00F13FF9 /* SearchHistoryCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A57E7D932A89F16E00F13FF9 /* SearchHistoryCollectionViewCell.swift */; };
 		A57E7D962A89F2DF00F13FF9 /* SearchHistoryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A57E7D952A89F2DF00F13FF9 /* SearchHistoryRepository.swift */; };
 		A5832AAD2A8BC0BC005C5A89 /* SearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5832AAC2A8BC0BC005C5A89 /* SearchResultViewController.swift */; };
@@ -56,6 +58,8 @@
 		421831D9B2AF24B5D08CFA11 /* Pods-GitHubAPI-GitHubAPIUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GitHubAPI-GitHubAPIUITests.debug.xcconfig"; path = "Target Support Files/Pods-GitHubAPI-GitHubAPIUITests/Pods-GitHubAPI-GitHubAPIUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		7D9BB911343F47AE753127A8 /* Pods-GitHubAPI.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GitHubAPI.release.xcconfig"; path = "Target Support Files/Pods-GitHubAPI/Pods-GitHubAPI.release.xcconfig"; sourceTree = "<group>"; };
 		A5669FA12A9E0EC1008CA1E4 /* RepositoryDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryDetailViewController.swift; sourceTree = "<group>"; };
+		A5669FA32A9EE900008CA1E4 /* ReadmeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadmeModel.swift; sourceTree = "<group>"; };
+		A5669FA52A9EEC4F008CA1E4 /* RepositoryDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryDetailViewModel.swift; sourceTree = "<group>"; };
 		A57E7D932A89F16E00F13FF9 /* SearchHistoryCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchHistoryCollectionViewCell.swift; sourceTree = "<group>"; };
 		A57E7D952A89F2DF00F13FF9 /* SearchHistoryRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchHistoryRepository.swift; sourceTree = "<group>"; };
 		A5832AAC2A8BC0BC005C5A89 /* SearchResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewController.swift; sourceTree = "<group>"; };
@@ -240,6 +244,7 @@
 				A57E7D952A89F2DF00F13FF9 /* SearchHistoryRepository.swift */,
 				A5832AB52A8CD9D4005C5A89 /* APIRequestManager.swift */,
 				A5832AB72A8E5F2C005C5A89 /* RepositoryModel.swift */,
+				A5669FA32A9EE900008CA1E4 /* ReadmeModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -249,6 +254,7 @@
 			children = (
 				A5898EDF2A887F990033BA86 /* SearchViewModel.swift */,
 				A5832AAE2A8BC666005C5A89 /* SearchResultViewModel.swift */,
+				A5669FA52A9EEC4F008CA1E4 /* RepositoryDetailViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -496,9 +502,11 @@
 				A5832AAD2A8BC0BC005C5A89 /* SearchResultViewController.swift in Sources */,
 				A5898EE02A887F990033BA86 /* SearchViewModel.swift in Sources */,
 				A5832AAF2A8BC666005C5A89 /* SearchResultViewModel.swift in Sources */,
+				A5669FA42A9EE900008CA1E4 /* ReadmeModel.swift in Sources */,
 				A5669FA22A9E0EC1008CA1E4 /* RepositoryDetailViewController.swift in Sources */,
 				A5898ED22A876B080033BA86 /* SearchViewController.swift in Sources */,
 				A5898EA22A8764690033BA86 /* AppDelegate.swift in Sources */,
+				A5669FA62A9EEC4F008CA1E4 /* RepositoryDetailViewModel.swift in Sources */,
 				A5898ED72A876C3D0033BA86 /* MainTabBarController.swift in Sources */,
 				A5898EA42A8764690033BA86 /* SceneDelegate.swift in Sources */,
 				A5898EDB2A87C2F40033BA86 /* Const.swift in Sources */,
