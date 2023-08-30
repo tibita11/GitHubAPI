@@ -25,6 +25,9 @@ class RepositoryDetailViewController: UIViewController {
     private let starStackView = UIStackView()
     private let forkStackView = UIStackView()
     private var webView: WKWebView!
+    private var activityIndicatorView: UIActivityIndicatorView!
+    /// READMEを取得できなかった際に表示する
+    private let warningLabel = UILabel()
     private var viewModel: RepositoryDetailViewModel!
     private let disposeBag = DisposeBag()
     
@@ -80,8 +83,26 @@ class RepositoryDetailViewController: UIViewController {
                 webView.load(URLRequest(url: url))
             })
             .disposed(by: disposeBag)
+        // MEMO: ローディング画面の表示可否
+        viewModel.outputs.isLoading
+            .drive(onNext: { [weak self] bool in
+                self?.changeActivityIndicatiorStatus(bool)
+            })
+            .disposed(by: disposeBag)
+        // MEMO: 取得失敗時のラベル表示
+        viewModel.outputs.isWarnig
+            .drive(onNext: { [weak self] bool in
+                self?.warningLabel.isHidden = !bool
+            })
+            .disposed(by: disposeBag)
         // MEMO: データ取得
         viewModel.getReadme(owner: repository.owner.login, repo: repository.name)
+    }
+    
+    /// trueの場合、表示して動かす・falseの場合、非表示して止める
+    private func changeActivityIndicatiorStatus(_ bool: Bool) {
+        activityIndicatorView.isHidden = !bool
+        bool ? activityIndicatorView.startAnimating() : activityIndicatorView.stopAnimating()
     }
     
     // MARK: - Layout
@@ -100,6 +121,8 @@ class RepositoryDetailViewController: UIViewController {
         setUpStarStackView()
         setUpForkStackView()
         setUpReadmeView()
+        setUpActivityIndicatorView()
+        setUpWarningLabel()
     }
     
     private func setUpRepositoryView() {
@@ -276,6 +299,31 @@ class RepositoryDetailViewController: UIViewController {
             webView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             webView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             webView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+        ])
+    }
+    
+    private func setUpActivityIndicatorView() {
+        activityIndicatorView = UIActivityIndicatorView()
+        activityIndicatorView.isHidden = true
+        activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
+        webView.addSubview(activityIndicatorView)
+        
+        NSLayoutConstraint.activate([
+            activityIndicatorView.centerXAnchor.constraint(equalTo: webView.centerXAnchor),
+            activityIndicatorView.centerYAnchor.constraint(equalTo: webView.centerYAnchor)
+        ])
+    }
+    
+    private func setUpWarningLabel() {
+        warningLabel.text = "問題が発生しました"
+        warningLabel.font = Const.titleFont
+        warningLabel.isHidden = true
+        warningLabel.translatesAutoresizingMaskIntoConstraints = false
+        webView.addSubview(warningLabel)
+        
+        NSLayoutConstraint.activate([
+            warningLabel.centerXAnchor.constraint(equalTo: webView.centerXAnchor),
+            warningLabel.centerYAnchor.constraint(equalTo: webView.centerYAnchor)
         ])
     }
 }
