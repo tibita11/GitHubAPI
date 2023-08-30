@@ -18,7 +18,7 @@ class SearchViewController: UIViewController {
     private var introductionViewMovedTopConstraint: NSLayoutConstraint!
     
     private var collectionView: UICollectionView!
-    private var dataSource: UICollectionViewDiffableDataSource<SearchHistorySection, SearchHistory.ID>!
+    private var dataSource: UICollectionViewDiffableDataSource<SearchHistorySection, String>!
 
     private var heightToNavBar: CGFloat {
         var height: CGFloat = 0
@@ -62,13 +62,18 @@ class SearchViewController: UIViewController {
     // MARK: - Action
     
     private func setUpViewModel() {
+        // MEMO: UserDefaultsが更新された場合に実行される
         viewModel.outputs.application
-            .do { [weak self] snapshot in
-                self?.showCollectionView(bool: snapshot.numberOfItems != 0)
+            .do { [weak self] value in
+                // MEMO: 値がある場合のみ表示する
+                self?.showCollectionView(bool: value.first != nil)
             }
-            .drive(onNext: { [weak self] snapshot in
+            .drive(onNext: { [weak self] value in
                 guard let self else { return }
-               dataSource.apply(snapshot, animatingDifferences: true)
+                var snapshot = NSDiffableDataSourceSnapshot<SearchHistorySection, String>()
+                snapshot.appendSections([.main])
+                snapshot.appendItems(value, toSection: .main)
+                dataSource.apply(snapshot, animatingDifferences: true)
             })
             .disposed(by: disposeBag)
         // 初期データを入れるため、バインド後に実行
@@ -239,15 +244,14 @@ class SearchViewController: UIViewController {
     }
     
     private func setUpCollectionViewDataSource() {
-        let searchHistoryCellRegistration = UICollectionView.CellRegistration<SearchHistoryCollectionViewCell, SearchHistory> { cell, indexPath, searchHistory in
-            cell.titleLabel.text = searchHistory.title
+        let searchHistoryCellRegistration = UICollectionView.CellRegistration<SearchHistoryCollectionViewCell, String> { cell, indexPath, value in
+            cell.titleLabel.text = value
         }
         
         dataSource = UICollectionViewDiffableDataSource(
             collectionView: collectionView,
-            cellProvider: { [weak self] collectionView, indexPath, itemIdentifier in
-                let searchHistory = self?.viewModel.getSearchHistory(id: itemIdentifier)
-                return collectionView.dequeueConfiguredReusableCell(using: searchHistoryCellRegistration, for: indexPath, item: searchHistory)
+            cellProvider: { collectionView, indexPath, itemIdentifier in
+                return collectionView.dequeueConfiguredReusableCell(using: searchHistoryCellRegistration, for: indexPath, item: itemIdentifier)
             })
     }
 }

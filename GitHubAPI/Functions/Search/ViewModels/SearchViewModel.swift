@@ -13,13 +13,8 @@ enum SearchHistorySection {
     case main
 }
 
-struct SearchHistory: Identifiable {
-    var id: UUID
-    var title: String
-}
-
 protocol SearchViewModelOutputs {
-    var application: Driver<NSDiffableDataSourceSnapshot<SearchHistorySection, SearchHistory.ID>> { get }
+    var application: Driver<[String]> { get }
 }
 
 protocol SearchViewModelType {
@@ -28,16 +23,21 @@ protocol SearchViewModelType {
 
 class SearchViewModel: SearchViewModelType {
     var outputs: SearchViewModelOutputs { self }
-    private let userDefaults = UserDefaults.standard
-    private var repository: SearchHistoryRepository = .init()
-    private let snapshot = PublishRelay<NSDiffableDataSourceSnapshot<SearchHistorySection, SearchHistory.ID>>()
     private let searchHistoryManager = SearchHistoryManager()
+    private var observer: NSKeyValueObservation?
+    private let searchHistory = PublishRelay<[String]>()
 
     
     // MARK: - Action
     
     func setUp() {
-        snapshot.accept(getSnapshot())
+        observer = UserDefaults.standard.observe(
+            \.searchHistory,
+             options: [.initial, .new],
+             changeHandler: { [weak self] userDefaults, changeValue in
+                 // MEMO: 変更後の値をUIとバインド
+                 self?.searchHistory.accept(changeValue.newValue ?? [])
+             })
     }
     
     func saveSearchHistory(value: String) {
@@ -53,33 +53,18 @@ class SearchViewModel: SearchViewModelType {
             // MEMO: 登録がない場合、そのまま保存
             searchHistoryManager.saveSearchHistory(value: [value])
         }
-        snapshot.accept(getSnapshot())
     }
     
     func deleteSearchHistory(row: Int) {
         searchHistoryManager.deleteSearchHistory(row: row)
-        snapshot.accept(getSnapshot())
     }
     
     func clearSearchHistory() {
         searchHistoryManager.deleteAllSearchHistory()
-        snapshot.accept(getSnapshot())
-    }
-    
-    private func getSnapshot() -> NSDiffableDataSourceSnapshot<SearchHistorySection, SearchHistory.ID> {
-        var snapshot = NSDiffableDataSourceSnapshot<SearchHistorySection, SearchHistory.ID>()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(repository.searchHistoryIDs, toSection: .main)
-        return snapshot
-    }
-    
-    func getSearchHistory(id: SearchHistory.ID) -> SearchHistory? {
-        return repository.searchHistory(id: id)
     }
     
     func getSearchWord(row: Int) -> String? {
-        guard let searchHistory = userDefaults.array(forKey: Const.searchHistoryKey) as? [String] else {
-            assertionFailure("Error: Failed to get DB")
+        guard let searchHistory = searchHistoryManager.getSearchHistory() else {
             return nil
         }
         return searchHistory[row]
@@ -90,7 +75,16 @@ class SearchViewModel: SearchViewModelType {
 // MARK: - SearchViewModelOutputs
 
 extension SearchViewModel: SearchViewModelOutputs {
-    var application: Driver<NSDiffableDataSourceSnapshot<SearchHistorySection, SearchHistory.ID>> {
-        snapshot.asDriver(onErrorDriveWith: .empty())
+    var application: Driver<[String]> {
+        searchHistory.asDriver(onErrorDriveWith: .empty())
+    }
+}
+
+
+// MARK: - UserDefaults
+
+extension UserDefaults {
+    @objc dynamic var searchHistory: [String] {
+        return array(forKey: Const.searchHistoryKey) as? [String] ?? []
     }
 }
