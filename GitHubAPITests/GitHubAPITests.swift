@@ -10,27 +10,58 @@ import XCTest
 
 final class GitHubAPITests: XCTestCase {
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    let testName = "testDB"
+    var userDefaults: UserDefaults!
+    var searchHistoryManager: SearchHistoryManager!
+        
+    //MEMO: 各テストメソッドが実行される前
+    override func setUp() {
+        super.setUp()
+        // MEMO: テスト用DBを作成する
+        userDefaults = UserDefaults(suiteName: testName)!
+        searchHistoryManager = .init(userDefaults: userDefaults)
+    }
+    
+    // MEMO: 各テストメソッドが実行された後
+    override func tearDown() {
+        // MEMO: テスト用DBを削除する
+        userDefaults.removePersistentDomain(forName: testName)
     }
 
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+    func test_UserDefaultsに値が保存されること() {
+        let value = "Swift"
+        searchHistoryManager.saveSearchHistory(value: value)
+        let searchHistory = userDefaults.array(forKey: Const.searchHistoryKey) as? [String]
+        XCTAssertNotNil(searchHistory)
+        XCTAssertTrue(searchHistory!.contains(value))
     }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+    
+    func test_UserDefaultsに重複がある場合に保存されないこと() {
+        let value = "deplication"
+        searchHistoryManager.saveSearchHistory(value: value)
+        searchHistoryManager.saveSearchHistory(value: value)
+        let searchHistory = userDefaults.array(forKey: Const.searchHistoryKey) as? [String]
+        XCTAssertNotNil(searchHistory)
+        XCTAssertTrue(searchHistory!.count == 1)
     }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
+    
+    func test_UserDefaultsのデータを削除できること() {
+        let value1 = "value1"
+        let value2 = "value2"
+        searchHistoryManager.saveSearchHistory(value: value1)
+        searchHistoryManager.saveSearchHistory(value: value2)
+        searchHistoryManager.deleteSearchHistory(row: 0)
+        let searchHistory = userDefaults.array(forKey: Const.searchHistoryKey) as? [String]
+        XCTAssertNotNil(searchHistory)
+        XCTAssertTrue(searchHistory!.first == value2)
+    }
+    
+    func test_UserDefaultsのデータを全て削除できること() {
+        let value = "Swift"
+        searchHistoryManager.saveSearchHistory(value: value)
+        searchHistoryManager.deleteAllSearchHistory()
+        let searchHistory = userDefaults.array(forKey: Const.searchHistoryKey) as? [String]
+        XCTAssertNil(searchHistory)
     }
 
 }

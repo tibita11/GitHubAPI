@@ -41,18 +41,7 @@ class SearchViewModel: SearchViewModelType {
     }
     
     func saveSearchHistory(value: String) {
-        if let searchHistory = searchHistoryManager.getSearchHistory() {
-            // MEMO: 重複がある場合、何もしない
-            guard !searchHistory.contains(value) else {
-                return
-            }
-            // MEMO: 配列を保存
-            let newValue = searchHistory + [value]
-            searchHistoryManager.saveSearchHistory(value: newValue)
-        } else {
-            // MEMO: 登録がない場合、そのまま保存
-            searchHistoryManager.saveSearchHistory(value: [value])
-        }
+        searchHistoryManager.saveSearchHistory(value: value)
     }
     
     func deleteSearchHistory(row: Int) {
@@ -64,10 +53,7 @@ class SearchViewModel: SearchViewModelType {
     }
     
     func getSearchWord(row: Int) -> String? {
-        guard let searchHistory = searchHistoryManager.getSearchHistory() else {
-            return nil
-        }
-        return searchHistory[row]
+        return searchHistoryManager.getSearchWord(row: row)
     }
 }
 

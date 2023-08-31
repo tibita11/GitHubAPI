@@ -9,14 +9,32 @@ import Foundation
 
 class SearchHistoryManager {
     
-    private let userDefaults = UserDefaults.standard
+    private let userDefaults: UserDefaults
+    
+    init(userDefaults: UserDefaults = UserDefaults.standard) {
+        self.userDefaults = userDefaults
+    }
 
-    func getSearchHistory() -> [String]? {
+    private func getSearchHistory() -> [String]? {
         return userDefaults.array(forKey: Const.searchHistoryKey) as? [String]
     }
     
-    func saveSearchHistory(value: [String]) {
+    private func setSearchHistory(value: [String]) {
         userDefaults.set(value, forKey: Const.searchHistoryKey)
+    }
+    
+    func saveSearchHistory(value: String) {
+        if let searchHistory = getSearchHistory() {
+            // MEMO: 重複がある場合、何もしない
+            guard !searchHistory.contains(value) else {
+                return
+            }
+            let newValue = searchHistory + [value]
+            setSearchHistory(value: newValue)
+        } else {
+            // MEMO: 登録がない場合、そのまま保存
+            setSearchHistory(value: [value])
+        }
     }
     
     func deleteSearchHistory(row: Int) {
@@ -24,10 +42,17 @@ class SearchHistoryManager {
             return
         }
         searchHistory.remove(at: row)
-        saveSearchHistory(value: searchHistory)
+        setSearchHistory(value: searchHistory)
     }
     
     func deleteAllSearchHistory() {
         userDefaults.removeObject(forKey: Const.searchHistoryKey)
+    }
+    
+    func getSearchWord(row: Int) -> String? {
+        guard let searchHistory = getSearchHistory() else {
+            return nil
+        }
+        return searchHistory[row]
     }
 }
