@@ -24,20 +24,26 @@ class RepositoryDetailViewModel: RepositoryDetailViewModelType {
     private let urlRelay = PublishRelay<String>()
     private let isLoadingRelay = PublishRelay<Bool>()
     private let isWarnigRelay = PublishRelay<Bool>()
+    private let readmeManager = ReadmeManager(readmeFetchProtocol: ReadmeFetcher())
     
     func getReadme(owner: String, repo: String) {
         isLoadingRelay.accept(true)
         
         Task {
-            do {
-                let readme = try await APIRequestManager().getReadme(owner: owner, repo: repo)
+            let result = await readmeManager.getAPIResult(owner: owner, repo: repo)
+            // MEMO: 結果をバインド
+            switch result {
+            case .update(let value):
+                guard let readme = value as? Readme else {
+                    assertionFailure("取得した値がReadme型に変換できませんでした。")
+                    return
+                }
                 isLoadingRelay.accept(false)
                 urlRelay.accept(readme.url)
-            } catch {
-                // MEMO: 取得できない場合、何もしない
+            default:
+                // MEMO: 取得できない場合、警告表示
                 isLoadingRelay.accept(false)
                 isWarnigRelay.accept(true)
-                print("Error: Failed to get README")
             }
         }
     }

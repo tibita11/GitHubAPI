@@ -35,6 +35,7 @@ class SearchResultViewModel: SearchResultViewModelType {
     private var pageCount = 1
     private var loadStatus: LoadStatus = .initial
     private let isLoadingRelay = PublishRelay<Bool>()
+    private let repositoryManager: RepositoryManager = .init(repositoryFetchProtocol: RepositoryFetcher())
     
     // MARK: - Action
     
@@ -51,30 +52,26 @@ class SearchResultViewModel: SearchResultViewModelType {
         }
         // MEMO: API通信を行い、結果をバインドする
         Task {
-            do {
-                let repositories = try await APIRequestManager().getRepository(
-                    perPage: pageCount,
-                    searchword: searchWord
-                )
+            let result = await repositoryManager.getAPIResult(
+                perPage: pageCount,
+                searchword: searchWord
+            )
+            // MEMO: 結果をバインド
+            switch result {
+            case .update(let value):
                 // MEMO: 新しく取得したデータは既存データに追加する
+                guard let repositoryList = value as? RepositoryList else { return }
                 var oldValue = searchResults.value
-                oldValue += repositories.items
+                oldValue += repositoryList.items
                 isLoadingRelay.accept(false)
                 searchResults.accept(oldValue)
                 pageCount += 1
                 // MEMO: nullの場合すでにデータが表示されているとみなす
-                loadStatus = repositories.items.first == nil ? .full : .loadmore
-            } catch let error as APIError {
-                // MEMO: 変更がないとみなし、処理を行わない
-                if error == .notModified {
-                    loadStatus = .full
-                    return
-                }
-                // MEMO: 再試行ボタンを表示する
-                isLoadingRelay.accept(false)
-                isRetry.accept(true)
-                loadStatus = .error
-            } catch {
+                loadStatus = repositoryList.items.first == nil ? .full : .loadmore
+            case .doNothing:
+                loadStatus = .full
+                break
+            case .retry:
                 // MEMO: 再試行ボタンを表示する
                 isLoadingRelay.accept(false)
                 isRetry.accept(true)

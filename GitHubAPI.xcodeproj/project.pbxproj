@@ -13,6 +13,8 @@
 		A5669FA42A9EE900008CA1E4 /* ReadmeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5669FA32A9EE900008CA1E4 /* ReadmeModel.swift */; };
 		A5669FA62A9EEC4F008CA1E4 /* RepositoryDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5669FA52A9EEC4F008CA1E4 /* RepositoryDetailViewModel.swift */; };
 		A5669FA82A9F7176008CA1E4 /* SearchHistoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5669FA72A9F7176008CA1E4 /* SearchHistoryManager.swift */; };
+		A5669FAA2AA0AA95008CA1E4 /* RepositoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5669FA92AA0AA95008CA1E4 /* RepositoryManager.swift */; };
+		A5669FAC2AA0AB0F008CA1E4 /* ReadmeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5669FAB2AA0AB0F008CA1E4 /* ReadmeManager.swift */; };
 		A57E7D942A89F16F00F13FF9 /* SearchHistoryCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A57E7D932A89F16E00F13FF9 /* SearchHistoryCollectionViewCell.swift */; };
 		A5832AAD2A8BC0BC005C5A89 /* SearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5832AAC2A8BC0BC005C5A89 /* SearchResultViewController.swift */; };
 		A5832AAF2A8BC666005C5A89 /* SearchResultViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5832AAE2A8BC666005C5A89 /* SearchResultViewModel.swift */; };
@@ -61,6 +63,8 @@
 		A5669FA32A9EE900008CA1E4 /* ReadmeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadmeModel.swift; sourceTree = "<group>"; };
 		A5669FA52A9EEC4F008CA1E4 /* RepositoryDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryDetailViewModel.swift; sourceTree = "<group>"; };
 		A5669FA72A9F7176008CA1E4 /* SearchHistoryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchHistoryManager.swift; sourceTree = "<group>"; };
+		A5669FA92AA0AA95008CA1E4 /* RepositoryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryManager.swift; sourceTree = "<group>"; };
+		A5669FAB2AA0AB0F008CA1E4 /* ReadmeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadmeManager.swift; sourceTree = "<group>"; };
 		A57E7D932A89F16E00F13FF9 /* SearchHistoryCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchHistoryCollectionViewCell.swift; sourceTree = "<group>"; };
 		A5832AAC2A8BC0BC005C5A89 /* SearchResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewController.swift; sourceTree = "<group>"; };
 		A5832AAE2A8BC666005C5A89 /* SearchResultViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultViewModel.swift; sourceTree = "<group>"; };
@@ -241,10 +245,12 @@
 		A5898EDD2A887F760033BA86 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				A5669FA72A9F7176008CA1E4 /* SearchHistoryManager.swift */,
-				A5832AB52A8CD9D4005C5A89 /* APIRequestManager.swift */,
 				A5832AB72A8E5F2C005C5A89 /* RepositoryModel.swift */,
 				A5669FA32A9EE900008CA1E4 /* ReadmeModel.swift */,
+				A5669FA72A9F7176008CA1E4 /* SearchHistoryManager.swift */,
+				A5832AB52A8CD9D4005C5A89 /* APIRequestManager.swift */,
+				A5669FA92AA0AA95008CA1E4 /* RepositoryManager.swift */,
+				A5669FAB2AA0AB0F008CA1E4 /* ReadmeManager.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -498,6 +504,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A5832AB62A8CD9D4005C5A89 /* APIRequestManager.swift in Sources */,
+				A5669FAA2AA0AA95008CA1E4 /* RepositoryManager.swift in Sources */,
 				A5832AAD2A8BC0BC005C5A89 /* SearchResultViewController.swift in Sources */,
 				A5898EE02A887F990033BA86 /* SearchViewModel.swift in Sources */,
 				A5832AAF2A8BC666005C5A89 /* SearchResultViewModel.swift in Sources */,
@@ -511,6 +518,7 @@
 				A5898EA42A8764690033BA86 /* SceneDelegate.swift in Sources */,
 				A5898EDB2A87C2F40033BA86 /* Const.swift in Sources */,
 				A5832AB82A8E5F2C005C5A89 /* RepositoryModel.swift in Sources */,
+				A5669FAC2AA0AB0F008CA1E4 /* ReadmeManager.swift in Sources */,
 				A57E7D942A89F16F00F13FF9 /* SearchHistoryCollectionViewCell.swift in Sources */,
 				A5832AB22A8BC733005C5A89 /* SearchResultCollectionViewCell.swift in Sources */,
 			);
