@@ -5,6 +5,8 @@
 
 検索結果からは、リポジトリの詳細情報やREADMEを確認することが可能です。
 ## 1.このアプリケーションについて
+![GitHubAPI](https://github.com/tibita11/GitHubAPI/assets/108079580/b6c53cd1-a798-46e6-bb97-6a39b1b3c050)
+
 ## 2. 使用しているライブラリ
 ・RxSwift
 
