@@ -39,11 +39,6 @@ class ReadmeManager {
                 repo: repo
             )
             return APIResult.update(readme)
-        } catch let error as APIError {
-            if error == .notModified {
-                return APIResult.doNothing
-            }
-            return APIResult.retry
         } catch {
             return APIResult.retry
         }

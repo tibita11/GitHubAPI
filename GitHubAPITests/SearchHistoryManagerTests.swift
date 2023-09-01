@@ -8,11 +8,11 @@
 import XCTest
 @testable import GitHubAPI
 
-final class GitHubAPITests: XCTestCase {
+final class SearchHistoryManagerTests: XCTestCase {
 
-    let testName = "testDB"
-    var userDefaults: UserDefaults!
-    var searchHistoryManager: SearchHistoryManager!
+    private let testName = "testDB"
+    private var userDefaults: UserDefaults!
+    private var searchHistoryManager: SearchHistoryManager!
         
     //MEMO: 各テストメソッドが実行される前
     override func setUp() {
