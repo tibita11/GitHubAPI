@@ -29,7 +29,7 @@ final class ReadmeManagerTests: XCTestCase {
                 print("updateきたよ")
                 XCTAssert(true)
             default:
-                XCTFail()
+                XCTFail("API取得処理が正しく行われませんでした。")
             }
             exp.fulfill()
         }
@@ -48,7 +48,7 @@ final class ReadmeManagerTests: XCTestCase {
                 print("retryきたよ")
                 XCTAssert(true)
             default:
-                XCTFail()
+                XCTFail("API取得処理が正しく行われませんでした。")
             }
             exp.fulfill()
         }

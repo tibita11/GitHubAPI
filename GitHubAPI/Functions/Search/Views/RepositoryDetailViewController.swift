@@ -101,7 +101,11 @@ class RepositoryDetailViewController: UIViewController {
     /// trueの場合、表示して動かす・falseの場合、非表示して止める
     private func changeActivityIndicatiorStatus(_ bool: Bool) {
         activityIndicatorView.isHidden = !bool
-        bool ? activityIndicatorView.startAnimating() : activityIndicatorView.stopAnimating()
+        if bool {
+            activityIndicatorView.startAnimating()
+        } else {
+            activityIndicatorView.stopAnimating()
+        }
     }
 
     // MARK: - Layout
@@ -132,7 +136,7 @@ class RepositoryDetailViewController: UIViewController {
         NSLayoutConstraint.activate([
             repositoryView.topAnchor.constraint(equalTo: view.topAnchor, constant: heightToNavBar),
             repositoryView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            repositoryView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            repositoryView.leadingAnchor.constraint(equalTo: view.leadingAnchor)
         ])
     }
 
@@ -152,7 +156,7 @@ class RepositoryDetailViewController: UIViewController {
             largeStackView.topAnchor.constraint(equalTo: repositoryView.topAnchor, constant: 10),
             largeStackView.trailingAnchor.constraint(equalTo: repositoryView.trailingAnchor, constant: -10),
             largeStackView.leadingAnchor.constraint(equalTo: repositoryView.leadingAnchor, constant: 10),
-            largeStackView.bottomAnchor.constraint(equalTo: repositoryView.bottomAnchor, constant: -10),
+            largeStackView.bottomAnchor.constraint(equalTo: repositoryView.bottomAnchor, constant: -10)
         ])
     }
 
@@ -166,7 +170,7 @@ class RepositoryDetailViewController: UIViewController {
         ownerStackView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            ownerStackView.heightAnchor.constraint(equalToConstant: 25),
+            ownerStackView.heightAnchor.constraint(equalToConstant: 25)
         ])
     }
 
@@ -181,7 +185,7 @@ class RepositoryDetailViewController: UIViewController {
             avatarImageView.topAnchor.constraint(equalTo: ownerStackView.topAnchor),
             avatarImageView.leadingAnchor.constraint(equalTo: ownerStackView.leadingAnchor),
             avatarImageView.bottomAnchor.constraint(equalTo: ownerStackView.bottomAnchor),
-            avatarImageView.widthAnchor.constraint(equalTo: avatarImageView.heightAnchor, multiplier: 1),
+            avatarImageView.widthAnchor.constraint(equalTo: avatarImageView.heightAnchor, multiplier: 1)
         ])
     }
 
@@ -214,7 +218,7 @@ class RepositoryDetailViewController: UIViewController {
         countStackView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            countStackView.heightAnchor.constraint(equalToConstant: 25),
+            countStackView.heightAnchor.constraint(equalToConstant: 25)
         ])
     }
 
@@ -242,7 +246,7 @@ class RepositoryDetailViewController: UIViewController {
             imageView.topAnchor.constraint(equalTo: starStackView.topAnchor),
             imageView.leadingAnchor.constraint(equalTo: starStackView.leadingAnchor),
             imageView.bottomAnchor.constraint(equalTo: starStackView.bottomAnchor),
-            imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor, multiplier: 1),
+            imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor, multiplier: 1)
         ])
     }
 
@@ -268,7 +272,7 @@ class RepositoryDetailViewController: UIViewController {
             imageView.topAnchor.constraint(equalTo: forkStackView.topAnchor),
             imageView.leadingAnchor.constraint(equalTo: forkStackView.leadingAnchor),
             imageView.bottomAnchor.constraint(equalTo: forkStackView.bottomAnchor),
-            imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor, multiplier: 1),
+            imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor, multiplier: 1)
         ])
     }
 
@@ -285,7 +289,7 @@ class RepositoryDetailViewController: UIViewController {
             label.topAnchor.constraint(equalTo: repositoryView.bottomAnchor),
             label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
             label.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            label.heightAnchor.constraint(equalToConstant: 50),
+            label.heightAnchor.constraint(equalToConstant: 50)
         ])
 
         let config = WKWebViewConfiguration()
@@ -297,7 +301,7 @@ class RepositoryDetailViewController: UIViewController {
             webView.topAnchor.constraint(equalTo: label.bottomAnchor),
             webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             webView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            webView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            webView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
 
@@ -309,7 +313,7 @@ class RepositoryDetailViewController: UIViewController {
 
         NSLayoutConstraint.activate([
             activityIndicatorView.centerXAnchor.constraint(equalTo: webView.centerXAnchor),
-            activityIndicatorView.centerYAnchor.constraint(equalTo: webView.centerYAnchor),
+            activityIndicatorView.centerYAnchor.constraint(equalTo: webView.centerYAnchor)
         ])
     }
 
@@ -322,7 +326,7 @@ class RepositoryDetailViewController: UIViewController {
 
         NSLayoutConstraint.activate([
             warningLabel.centerXAnchor.constraint(equalTo: webView.centerXAnchor),
-            warningLabel.centerYAnchor.constraint(equalTo: webView.centerYAnchor),
+            warningLabel.centerYAnchor.constraint(equalTo: webView.centerYAnchor)
         ])
     }
 }

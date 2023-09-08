@@ -76,7 +76,7 @@ class SearchResultCollectionViewCell: UICollectionViewCell {
             largeStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             largeStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             largeStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-            bottomAnchor,
+            bottomAnchor
         ])
     }
 
@@ -97,7 +97,7 @@ class SearchResultCollectionViewCell: UICollectionViewCell {
             ownerStackView.topAnchor.constraint(equalTo: largeStackView.topAnchor),
             ownerStackView.leadingAnchor.constraint(equalTo: largeStackView.leadingAnchor),
             ownerStackView.trailingAnchor.constraint(equalTo: largeStackView.trailingAnchor),
-            heightAnchor,
+            heightAnchor
         ])
     }
 
@@ -111,7 +111,7 @@ class SearchResultCollectionViewCell: UICollectionViewCell {
             ownerImageView.topAnchor.constraint(equalTo: ownerStackView.topAnchor),
             ownerImageView.leadingAnchor.constraint(equalTo: ownerStackView.leadingAnchor),
             ownerImageView.bottomAnchor.constraint(equalTo: ownerStackView.bottomAnchor),
-            ownerImageView.widthAnchor.constraint(equalTo: ownerImageView.heightAnchor, multiplier: 1),
+            ownerImageView.widthAnchor.constraint(equalTo: ownerImageView.heightAnchor, multiplier: 1)
         ])
     }
 
@@ -147,7 +147,7 @@ class SearchResultCollectionViewCell: UICollectionViewCell {
             mediumStackView.leadingAnchor.constraint(equalTo: largeStackView.leadingAnchor),
             mediumStackView.trailingAnchor.constraint(equalTo: largeStackView.trailingAnchor),
             mediumStackView.bottomAnchor.constraint(equalTo: largeStackView.bottomAnchor),
-            heightAnchor,
+            heightAnchor
         ])
     }
 
@@ -167,7 +167,7 @@ class SearchResultCollectionViewCell: UICollectionViewCell {
             starImageView.topAnchor.constraint(equalTo: starStackView.topAnchor),
             starImageView.leadingAnchor.constraint(equalTo: starStackView.leadingAnchor),
             starImageView.bottomAnchor.constraint(equalTo: starStackView.bottomAnchor),
-            starImageView.widthAnchor.constraint(equalTo: starImageView.heightAnchor, multiplier: 1),
+            starImageView.widthAnchor.constraint(equalTo: starImageView.heightAnchor, multiplier: 1)
         ])
     }
 

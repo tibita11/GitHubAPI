@@ -1,2 +1,6 @@
 # file options
 --exclude Pods
+
+# Rule
+--disable trailingCommas
+--disable wrapMultilineStatementBraces

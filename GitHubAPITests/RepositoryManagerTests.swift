@@ -29,7 +29,7 @@ final class RepositoryManagerTests: XCTestCase {
                 print("updateきたよ")
                 XCTAssert(true)
             default:
-                XCTFail()
+                XCTFail("API処理が正しく行われませんでした。")
             }
             exp.fulfill()
         }
@@ -48,7 +48,7 @@ final class RepositoryManagerTests: XCTestCase {
                 print("doNothingきたよ")
                 XCTAssert(true)
             default:
-                XCTFail()
+                XCTFail("API処理が正しく行われませんでした。")
             }
             exp.fulfill()
         }
@@ -67,7 +67,7 @@ final class RepositoryManagerTests: XCTestCase {
                 print("retryきたよ")
                 XCTAssert(true)
             default:
-                XCTFail()
+                XCTFail("API処理が正しく行われませんでした。")
             }
             exp.fulfill()
         }

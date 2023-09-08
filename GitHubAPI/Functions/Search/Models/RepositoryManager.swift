@@ -23,7 +23,7 @@ class RepositoryFetcher: RepositoryFetchPorotocol {
         var urlComponents = URLComponents(string: "https://api.github.com/search/repositories")
         urlComponents?.queryItems = [
             URLQueryItem(name: "q", value: searchword),
-            URLQueryItem(name: "page", value: String(perPage)),
+            URLQueryItem(name: "page", value: String(perPage))
         ]
         // MEMO: urlが作成できないケースを認識するため、デバッグ時にアプリを落とす
         guard let url = urlComponents?.url else {
@@ -44,7 +44,8 @@ class RepositoryManager {
 
     func getAPIResult(perPage: Int, searchword: String) async -> APIResult {
         do {
-            let repositoryList = try await repositoryFetchProtocol.fetchRepository(perPage: perPage, searchword: searchword)
+            let repositoryList = try await repositoryFetchProtocol
+                .fetchRepository(perPage: perPage, searchword: searchword)
             return APIResult.update(repositoryList)
         } catch let error as APIError {
             if error == .notModified {

@@ -1,0 +1,10 @@
+# file options
+excluded:
+- Pods
+
+# Rule
+line_length: 150
+type_body_length: 500
+
+disabled_rules:
+- unused_optional_binding

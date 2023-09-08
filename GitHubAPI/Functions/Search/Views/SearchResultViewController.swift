@@ -121,7 +121,11 @@ class SearchResultViewController: UIViewController {
     /// trueの場合、表示して動かす・falseの場合、非表示して止める
     private func changeActivityIndicatiorStatus(_ bool: Bool) {
         activityIndicatorView.isHidden = !bool
-        bool ? activityIndicatorView.startAnimating() : activityIndicatorView.stopAnimating()
+        if bool {
+            activityIndicatorView.startAnimating()
+        } else {
+            activityIndicatorView.stopAnimating()
+        }
     }
 
     // MARK: - Layout
@@ -149,24 +153,27 @@ class SearchResultViewController: UIViewController {
             collectionView.topAnchor.constraint(equalTo: view.topAnchor, constant: heightToNavBar),
             collectionView.leftAnchor.constraint(equalTo: view.leftAnchor),
             collectionView.rightAnchor.constraint(equalTo: view.rightAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
 
     private func setUpDataSource() {
-        let searchResultCellRegistration = UICollectionView.CellRegistration<SearchResultCollectionViewCell, Repository> { cell, _, result in
-            cell.repositoryNameLabel.text = result.name
-            cell.ownerNameLabel.text = result.owner.login
-            cell.ownerImageView.kf.setImage(with: URL(string: result.owner.avatarURL))
-            cell.aboutLabel.text = result.description
-            cell.starCountLabel.text = String(result.starCount)
-            cell.languageLabel.text = result.language
-        }
+        let searchResultCellRegistration = UICollectionView
+            .CellRegistration<SearchResultCollectionViewCell, Repository> { cell, _, result in
+                cell.repositoryNameLabel.text = result.name
+                cell.ownerNameLabel.text = result.owner.login
+                cell.ownerImageView.kf.setImage(with: URL(string: result.owner.avatarURL))
+                cell.aboutLabel.text = result.description
+                cell.starCountLabel.text = String(result.starCount)
+                cell.languageLabel.text = result.language
+            }
 
         dataSource = UICollectionViewDiffableDataSource(
             collectionView: collectionView,
             cellProvider: { collectionView, indexPath, itemIdentifier in
-                collectionView.dequeueConfiguredReusableCell(using: searchResultCellRegistration, for: indexPath, item: itemIdentifier)
+                collectionView.dequeueConfiguredReusableCell(using: searchResultCellRegistration,
+                                                             for: indexPath,
+                                                             item: itemIdentifier)
             }
         )
     }
@@ -184,7 +191,7 @@ class SearchResultViewController: UIViewController {
             noDataWarnigView.topAnchor.constraint(equalTo: view.topAnchor),
             noDataWarnigView.leftAnchor.constraint(equalTo: view.leftAnchor),
             noDataWarnigView.rightAnchor.constraint(equalTo: view.rightAnchor),
-            noDataWarnigView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            noDataWarnigView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         // MEMO: View中央の文言を設定する
         let label = UILabel()
@@ -195,7 +202,7 @@ class SearchResultViewController: UIViewController {
 
         NSLayoutConstraint.activate([
             label.centerXAnchor.constraint(equalTo: noDataWarnigView.centerXAnchor),
-            label.centerYAnchor.constraint(equalTo: noDataWarnigView.centerYAnchor),
+            label.centerYAnchor.constraint(equalTo: noDataWarnigView.centerYAnchor)
         ])
     }
 
@@ -212,7 +219,7 @@ class SearchResultViewController: UIViewController {
             retryView.topAnchor.constraint(equalTo: view.topAnchor),
             retryView.leftAnchor.constraint(equalTo: view.leftAnchor),
             retryView.rightAnchor.constraint(equalTo: view.rightAnchor),
-            retryView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            retryView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         // MEMO: View中央の文言を設定する
         let label = UILabel()
@@ -237,7 +244,7 @@ class SearchResultViewController: UIViewController {
 
         NSLayoutConstraint.activate([
             stackView.centerYAnchor.constraint(equalTo: retryView.centerYAnchor),
-            stackView.centerXAnchor.constraint(equalTo: retryView.centerXAnchor),
+            stackView.centerXAnchor.constraint(equalTo: retryView.centerXAnchor)
         ])
     }
 
@@ -249,7 +256,7 @@ class SearchResultViewController: UIViewController {
 
         NSLayoutConstraint.activate([
             activityIndicatorView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            activityIndicatorView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            activityIndicatorView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
 }
@@ -270,8 +277,8 @@ extension SearchResultViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         // MEMO: タップした行の詳細を表示する
         let repository = viewModel.getRepository(row: indexPath.row)
-        let vc = RepositoryDetailViewController(repository: repository)
-        navigationController?.pushViewController(vc, animated: true)
+        let repositoryDetailVC = RepositoryDetailViewController(repository: repository)
+        navigationController?.pushViewController(repositoryDetailVC, animated: true)
         collectionView.deselectItem(at: indexPath, animated: true)
     }
 }

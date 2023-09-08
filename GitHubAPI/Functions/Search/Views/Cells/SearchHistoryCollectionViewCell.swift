@@ -50,7 +50,7 @@ class SearchHistoryCollectionViewCell: UICollectionViewCell {
             titleLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 30),
             titleLabel.rightAnchor.constraint(equalTo: imageView.leftAnchor),
             titleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            heightConstraint,
+            heightConstraint
         ])
     }
 
@@ -64,7 +64,7 @@ class SearchHistoryCollectionViewCell: UICollectionViewCell {
             imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
             imageView.rightAnchor.constraint(equalTo: contentView.rightAnchor),
             imageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor, multiplier: 1),
+            imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor, multiplier: 1)
         ])
     }
 }
