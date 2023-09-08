@@ -53,7 +53,7 @@ class SearchViewModel: SearchViewModelType {
     }
 
     func getSearchWord(row: Int) -> String? {
-        return searchHistoryManager.getSearchWord(row: row)
+        searchHistoryManager.getSearchWord(row: row)
     }
 }
 
@@ -69,6 +69,6 @@ extension SearchViewModel: SearchViewModelOutputs {
 
 extension UserDefaults {
     @objc dynamic var searchHistory: [String] {
-        return array(forKey: Const.searchHistoryKey) as? [String] ?? []
+        array(forKey: Const.searchHistoryKey) as? [String] ?? []
     }
 }

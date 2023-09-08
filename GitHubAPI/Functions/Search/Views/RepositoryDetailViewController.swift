@@ -32,7 +32,7 @@ class RepositoryDetailViewController: UIViewController {
 
     private var heightToNavBar: CGFloat {
         var height: CGFloat = 0
-        if let navigationController = navigationController {
+        if let navigationController {
             let navBarMaxY = navigationController.navigationBar.frame.maxY
             height = navBarMaxY
         }

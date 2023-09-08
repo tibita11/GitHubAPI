@@ -15,7 +15,7 @@ class SearchHistoryManager {
     }
 
     private func getSearchHistory() -> [String]? {
-        return userDefaults.array(forKey: Const.searchHistoryKey) as? [String]
+        userDefaults.array(forKey: Const.searchHistoryKey) as? [String]
     }
 
     private func setSearchHistory(value: [String]) {
