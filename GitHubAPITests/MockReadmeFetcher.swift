@@ -10,8 +10,8 @@
 final class MockReadmeFetcher: ReadmeFetchProtocol {
     var apiError: APIError?
     private let mockReadme = Readme(url: "testURL")
-    
-    func fetchReadme(owner: String, repo: String) async throws -> Readme {
+
+    func fetchReadme(owner _: String, repo _: String) async throws -> Readme {
         if let apiError {
             throw apiError
         }

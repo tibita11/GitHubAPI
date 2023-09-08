@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import RxSwift
 import RxCocoa
+import RxSwift
 
 enum SearchHistorySection {
     case main
@@ -27,36 +27,35 @@ class SearchViewModel: SearchViewModelType {
     private var observer: NSKeyValueObservation?
     private let searchHistory = PublishRelay<[String]>()
 
-    
     // MARK: - Action
-    
+
     func setUp() {
         observer = UserDefaults.standard.observe(
             \.searchHistory,
-             options: [.initial, .new],
-             changeHandler: { [weak self] userDefaults, changeValue in
-                 // MEMO: 変更後の値をUIとバインド
-                 self?.searchHistory.accept(changeValue.newValue ?? [])
-             })
+            options: [.initial, .new],
+            changeHandler: { [weak self] _, changeValue in
+                // MEMO: 変更後の値をUIとバインド
+                self?.searchHistory.accept(changeValue.newValue ?? [])
+            }
+        )
     }
-    
+
     func saveSearchHistory(value: String) {
         searchHistoryManager.saveSearchHistory(value: value)
     }
-    
+
     func deleteSearchHistory(row: Int) {
         searchHistoryManager.deleteSearchHistory(row: row)
     }
-    
+
     func clearSearchHistory() {
         searchHistoryManager.deleteAllSearchHistory()
     }
-    
+
     func getSearchWord(row: Int) -> String? {
         return searchHistoryManager.getSearchWord(row: row)
     }
 }
-
 
 // MARK: - SearchViewModelOutputs
 
@@ -65,7 +64,6 @@ extension SearchViewModel: SearchViewModelOutputs {
         searchHistory.asDriver(onErrorDriveWith: .empty())
     }
 }
-
 
 // MARK: - UserDefaults
 

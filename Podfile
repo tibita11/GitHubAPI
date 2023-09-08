@@ -8,6 +8,7 @@ target 'GitHubAPI' do
   pod 'RxSwift'
   pod 'RxCocoa'
   pod 'Kingfisher'
+  pod 'SwiftFormat/CLI'
 
   # Pods for GitHubAPI
 

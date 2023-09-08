@@ -8,9 +8,8 @@
 import Foundation
 
 class SearchHistoryManager {
-    
     private let userDefaults: UserDefaults
-    
+
     init(userDefaults: UserDefaults = UserDefaults.standard) {
         self.userDefaults = userDefaults
     }
@@ -18,11 +17,11 @@ class SearchHistoryManager {
     private func getSearchHistory() -> [String]? {
         return userDefaults.array(forKey: Const.searchHistoryKey) as? [String]
     }
-    
+
     private func setSearchHistory(value: [String]) {
         userDefaults.set(value, forKey: Const.searchHistoryKey)
     }
-    
+
     func saveSearchHistory(value: String) {
         if let searchHistory = getSearchHistory() {
             // MEMO: 重複がある場合、何もしない
@@ -36,7 +35,7 @@ class SearchHistoryManager {
             setSearchHistory(value: [value])
         }
     }
-    
+
     func deleteSearchHistory(row: Int) {
         guard var searchHistory = getSearchHistory() else {
             return
@@ -44,11 +43,11 @@ class SearchHistoryManager {
         searchHistory.remove(at: row)
         setSearchHistory(value: searchHistory)
     }
-    
+
     func deleteAllSearchHistory() {
         userDefaults.removeObject(forKey: Const.searchHistoryKey)
     }
-    
+
     func getSearchWord(row: Int) -> String? {
         guard let searchHistory = getSearchHistory() else {
             return nil

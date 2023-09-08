@@ -1,27 +1,26 @@
 //
-//  GitHubAPITests.swift
+//  SearchHistoryManagerTests.swift
 //  GitHubAPITests
 //
 //  Created by 鈴木楓香 on 2023/08/12.
 //
 
-import XCTest
 @testable import GitHubAPI
+import XCTest
 
 final class SearchHistoryManagerTests: XCTestCase {
-
     private let testName = "testDB"
     private var userDefaults: UserDefaults!
     private var searchHistoryManager: SearchHistoryManager!
-        
-    //MEMO: 各テストメソッドが実行される前
+
+    // MEMO: 各テストメソッドが実行される前
     override func setUp() {
         super.setUp()
         // MEMO: テスト用DBを作成する
         userDefaults = UserDefaults(suiteName: testName)!
         searchHistoryManager = .init(userDefaults: userDefaults)
     }
-    
+
     // MEMO: 各テストメソッドが実行された後
     override func tearDown() {
         // MEMO: テスト用DBを削除する
@@ -35,7 +34,7 @@ final class SearchHistoryManagerTests: XCTestCase {
         XCTAssertNotNil(searchHistory)
         XCTAssertTrue(searchHistory!.contains(value))
     }
-    
+
     func test_UserDefaultsに重複がある場合に保存されないこと() {
         let value = "deplication"
         searchHistoryManager.saveSearchHistory(value: value)
@@ -44,7 +43,7 @@ final class SearchHistoryManagerTests: XCTestCase {
         XCTAssertNotNil(searchHistory)
         XCTAssertTrue(searchHistory!.count == 1)
     }
-    
+
     func test_UserDefaultsのデータを削除できること() {
         let value1 = "value1"
         let value2 = "value2"
@@ -55,7 +54,7 @@ final class SearchHistoryManagerTests: XCTestCase {
         XCTAssertNotNil(searchHistory)
         XCTAssertTrue(searchHistory!.first == value2)
     }
-    
+
     func test_UserDefaultsのデータを全て削除できること() {
         let value = "Swift"
         searchHistoryManager.saveSearchHistory(value: value)
@@ -63,5 +62,4 @@ final class SearchHistoryManagerTests: XCTestCase {
         let searchHistory = userDefaults.array(forKey: Const.searchHistoryKey) as? [String]
         XCTAssertNil(searchHistory)
     }
-
 }

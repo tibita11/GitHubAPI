@@ -21,13 +21,13 @@ protocol APIRequestManagerProtocol {
 }
 
 extension APIRequestManagerProtocol {
-    func handleSessionTask<T: Decodable>(_ dataType: T.Type, request: URLRequest) async throws -> T {
+    func handleSessionTask<T: Decodable>(_: T.Type, request: URLRequest) async throws -> T {
         let (data, response) = try await URLSession.shared.data(for: request)
-        
+
         guard let response = response as? HTTPURLResponse else {
             throw APIError.unknownError
         }
-        
+
         switch response.statusCode {
         case 200:
             // MEMO: 取得できたレスポンスを引数で指定した型の配列に変換して受け取る

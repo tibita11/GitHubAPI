@@ -6,11 +6,13 @@ PODS:
   - RxRelay (6.5.0):
     - RxSwift (= 6.5.0)
   - RxSwift (6.5.0)
+  - SwiftFormat/CLI (0.52.3)
 
 DEPENDENCIES:
   - Kingfisher
   - RxCocoa
   - RxSwift
+  - SwiftFormat/CLI
 
 SPEC REPOS:
   trunk:
@@ -18,13 +20,15 @@ SPEC REPOS:
     - RxCocoa
     - RxRelay
     - RxSwift
+    - SwiftFormat
 
 SPEC CHECKSUMS:
   Kingfisher: 6c5449c6450c5239166510ba04afe374a98afc4f
   RxCocoa: 94f817b71c07517321eb4f9ad299112ca8af743b
   RxRelay: 1de1523e604c72b6c68feadedd1af3b1b4d0ecbd
   RxSwift: 5710a9e6b17f3c3d6e40d6e559b9fa1e813b2ef8
+  SwiftFormat: 5de81c42f043741a16e17ae2da012bbddc7c0b58
 
-PODFILE CHECKSUM: 99a12ef1c8495fda905d8d25b521f709dd1d9eff
+PODFILE CHECKSUM: 676d0a2b9783527b3036c51752afb7d966556304
 
 COCOAPODS: 1.11.3

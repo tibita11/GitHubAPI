@@ -5,19 +5,18 @@
 //  Created by 鈴木楓香 on 2023/09/01.
 //
 
-import XCTest
 @testable import GitHubAPI
+import XCTest
 
 final class RepositoryManagerTests: XCTestCase {
-    
     private var repositoryManager: RepositoryManager!
     private var mockRepositoryFetcher: MockRepositoryFetcher!
-    
+
     override func setUp() {
         mockRepositoryFetcher = MockRepositoryFetcher()
         repositoryManager = .init(repositoryFetchProtocol: mockRepositoryFetcher)
     }
-    
+
     func test_updateが返されること() {
         mockRepositoryFetcher.apiError = nil
         let exp = XCTestExpectation(description: "Connect API")
@@ -36,7 +35,7 @@ final class RepositoryManagerTests: XCTestCase {
         }
         wait(for: [exp], timeout: 5)
     }
-    
+
     func test_doNothingが返されること() {
         mockRepositoryFetcher.apiError = .notModified
         let exp = XCTestExpectation(description: "Connect API")
@@ -55,7 +54,7 @@ final class RepositoryManagerTests: XCTestCase {
         }
         wait(for: [exp], timeout: 5)
     }
-    
+
     func test_retryが返されること() {
         mockRepositoryFetcher.apiError = .unknownError
         let exp = XCTestExpectation(description: "Connect API")

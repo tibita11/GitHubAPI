@@ -27,11 +27,11 @@ class ReadmeFetcher: ReadmeFetchProtocol {
 
 class ReadmeManager {
     private let readmeFetchProtocol: ReadmeFetchProtocol
-    
+
     init(readmeFetchProtocol: ReadmeFetchProtocol) {
         self.readmeFetchProtocol = readmeFetchProtocol
     }
-    
+
     func getAPIResult(owner: String, repo: String) async -> APIResult {
         do {
             let readme = try await readmeFetchProtocol.fetchReadme(

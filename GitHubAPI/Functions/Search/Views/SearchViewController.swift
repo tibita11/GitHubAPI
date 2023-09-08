@@ -5,9 +5,9 @@
 //  Created by 鈴木楓香 on 2023/08/12.
 //
 
-import UIKit
-import RxSwift
 import RxCocoa
+import RxSwift
+import UIKit
 
 class SearchViewController: UIViewController {
     private var searchBar: UISearchBar!
@@ -16,51 +16,51 @@ class SearchViewController: UIViewController {
     private let introductionView = UIView()
     private var introductionViewInitialTopConstraint: NSLayoutConstraint!
     private var introductionViewMovedTopConstraint: NSLayoutConstraint!
-    
+
     private var collectionView: UICollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<SearchHistorySection, String>!
 
     private var heightToNavBar: CGFloat {
         var height: CGFloat = 0
-        if let navigationController = self.parent?.navigationController {
+        if let navigationController = parent?.navigationController {
             let navBarMaxY = navigationController.navigationBar.frame.maxY
             height = navBarMaxY
         }
         return height
     }
+
     private var heightToTabBar: CGFloat {
-        self.tabBarController?.tabBar.bounds.height ?? 0
+        tabBarController?.tabBar.bounds.height ?? 0
     }
+
     /// レイアウト処理は一度のみ実行
     private lazy var initViewLayout: Void = {
         setUpLayout()
     }()
-    
+
     private let viewModel = SearchViewModel()
     private let disposeBag = DisposeBag()
-    
-    
+
     // MARK: - View Life Cycle
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-    
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
+
         _ = initViewLayout
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+
         setUpViewModel()
     }
-    
-    
+
     // MARK: - Action
-    
+
     private func setUpViewModel() {
         // MEMO: UserDefaultsが更新された場合に実行される
         viewModel.outputs.application
@@ -79,11 +79,11 @@ class SearchViewController: UIViewController {
         // 初期データを入れるため、バインド後に実行
         viewModel.setUp()
     }
-    
+
     @objc private func tapClearButton() {
         viewModel.clearSearchHistory()
     }
-    
+
     /// CollectionViewの表示・非表示をanimationを使用して切り替える
     private func showCollectionView(bool: Bool) {
         // コンフリクトを起こす可能性があるので、isActiveの設定を明示的な順序で行う
@@ -94,12 +94,12 @@ class SearchViewController: UIViewController {
             introductionViewMovedTopConstraint.isActive = !bool
             introductionViewInitialTopConstraint.isActive = bool
         }
-        
+
         UIView.animate(withDuration: 0.5, delay: 0) { [weak self] in
             guard let self else { return }
             view.layoutIfNeeded()
         }
-        
+
         UIView.animate(withDuration: 0.5, delay: 0) { [weak self] in
             guard let self else { return }
             introductionView.alpha = bool ? 0 : 1
@@ -107,24 +107,24 @@ class SearchViewController: UIViewController {
             collectionView.alpha = bool ? 1 : 0
         }
     }
-    
-    
+
     // MARK: - Layout
-    
+
     private func setUpLayout() {
-        self.view.backgroundColor = .systemGray6
-        
+        view.backgroundColor = .systemGray6
+
         setUpSearchBar()
         setUpSearchHistoryCollectionHeaderView()
         setUpIntroductionView()
         setUpCollectionView()
         setUpCollectionViewDataSource()
     }
-    
+
     private func setUpSearchBar() {
         // NavigationBar上に設置
-        if let navigationBarFrame = self.parent?.navigationController?.navigationBar.bounds,
-        let navigationItem = self.parent?.navigationItem {
+        if let navigationBarFrame = parent?.navigationController?.navigationBar.bounds,
+           let navigationItem = parent?.navigationItem
+        {
             let searchBar = UISearchBar(frame: navigationBarFrame)
             searchBar.placeholder = "Search repository"
             searchBar.showsCancelButton = true
@@ -134,7 +134,7 @@ class SearchViewController: UIViewController {
             self.searchBar = searchBar
         }
     }
-    
+
     private func setUpSearchHistoryCollectionHeaderView() {
         // クリアボタン設定
         let clearButton = UIButton()
@@ -144,12 +144,12 @@ class SearchViewController: UIViewController {
         clearButton.titleLabel?.font = Const.textFont
         clearButton.translatesAutoresizingMaskIntoConstraints = false
         searchHistoryCollectionHeaderView.addSubview(clearButton)
-        
+
         NSLayoutConstraint.activate([
             clearButton.topAnchor.constraint(equalTo: searchHistoryCollectionHeaderView.topAnchor),
             clearButton.rightAnchor.constraint(equalTo: searchHistoryCollectionHeaderView.rightAnchor),
             clearButton.bottomAnchor.constraint(equalTo: searchHistoryCollectionHeaderView.bottomAnchor),
-            clearButton.widthAnchor.constraint(equalTo: clearButton.heightAnchor, multiplier: 1)
+            clearButton.widthAnchor.constraint(equalTo: clearButton.heightAnchor, multiplier: 1),
         ])
         // ラベル設定
         let label = UILabel()
@@ -158,25 +158,25 @@ class SearchViewController: UIViewController {
         label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         searchHistoryCollectionHeaderView.addSubview(label)
-        
+
         NSLayoutConstraint.activate([
             label.topAnchor.constraint(equalTo: searchHistoryCollectionHeaderView.topAnchor),
             label.leftAnchor.constraint(equalTo: searchHistoryCollectionHeaderView.leftAnchor, constant: 30),
             label.rightAnchor.constraint(equalTo: clearButton.leftAnchor),
-            label.bottomAnchor.constraint(equalTo: searchHistoryCollectionHeaderView.bottomAnchor)
+            label.bottomAnchor.constraint(equalTo: searchHistoryCollectionHeaderView.bottomAnchor),
         ])
         // HeaderViewの設定
         searchHistoryCollectionHeaderView.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(searchHistoryCollectionHeaderView)
-        
+        view.addSubview(searchHistoryCollectionHeaderView)
+
         NSLayoutConstraint.activate([
-            searchHistoryCollectionHeaderView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: heightToNavBar),
-            searchHistoryCollectionHeaderView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
-            searchHistoryCollectionHeaderView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
-            searchHistoryCollectionHeaderView.heightAnchor.constraint(equalToConstant: 100)
+            searchHistoryCollectionHeaderView.topAnchor.constraint(equalTo: view.topAnchor, constant: heightToNavBar),
+            searchHistoryCollectionHeaderView.rightAnchor.constraint(equalTo: view.rightAnchor),
+            searchHistoryCollectionHeaderView.leftAnchor.constraint(equalTo: view.leftAnchor),
+            searchHistoryCollectionHeaderView.heightAnchor.constraint(equalToConstant: 100),
         ])
     }
-    
+
     private func setUpIntroductionView() {
         // ラベル設定
         let titleLabel = UILabel()
@@ -195,29 +195,29 @@ class SearchViewController: UIViewController {
         stackView.addArrangedSubview(textLabel)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         introductionView.addSubview(stackView)
-        
+
         NSLayoutConstraint.activate([
             stackView.centerYAnchor.constraint(equalTo: introductionView.centerYAnchor),
-            stackView.centerXAnchor.constraint(equalTo: introductionView.centerXAnchor)
+            stackView.centerXAnchor.constraint(equalTo: introductionView.centerXAnchor),
         ])
         // IntroductionViewの設定
         introductionView.alpha = 0
         introductionView.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(introductionView)
-        
+        view.addSubview(introductionView)
+
         NSLayoutConstraint.activate([
-            introductionView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
-            introductionView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
-            introductionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor,
-                                                     constant: -heightToTabBar)
+            introductionView.rightAnchor.constraint(equalTo: view.rightAnchor),
+            introductionView.leftAnchor.constraint(equalTo: view.leftAnchor),
+            introductionView.bottomAnchor.constraint(equalTo: view.bottomAnchor,
+                                                     constant: -heightToTabBar),
         ])
     }
-    
+
     private func setUpCollectionView() {
         var configuration = UICollectionLayoutListConfiguration(appearance: .plain)
         configuration.backgroundColor = .systemGray6
         configuration.trailingSwipeActionsConfigurationProvider = { indexPath in
-            let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] action, view, completion in
+            let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] _, _, completion in
                 guard let self else { return }
                 viewModel.deleteSearchHistory(row: indexPath.row)
                 completion(true)
@@ -228,34 +228,34 @@ class SearchViewController: UIViewController {
         collectionView = UICollectionView(frame: .null, collectionViewLayout: layout)
         collectionView.delegate = self
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(collectionView)
-        
+        view.addSubview(collectionView)
+
         // animationを実行するため、プロパティとして保持する
         introductionViewInitialTopConstraint = introductionView.topAnchor.constraint(equalTo: searchHistoryCollectionHeaderView.bottomAnchor)
-        introductionViewMovedTopConstraint = introductionView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: heightToNavBar)
-        
+        introductionViewMovedTopConstraint = introductionView.topAnchor.constraint(equalTo: view.topAnchor, constant: heightToNavBar)
+
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: searchHistoryCollectionHeaderView.bottomAnchor),
-            collectionView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
-            collectionView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor,
-                                                   constant: -heightToTabBar)
+            collectionView.leftAnchor.constraint(equalTo: view.leftAnchor),
+            collectionView.rightAnchor.constraint(equalTo: view.rightAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor,
+                                                   constant: -heightToTabBar),
         ])
     }
-    
+
     private func setUpCollectionViewDataSource() {
-        let searchHistoryCellRegistration = UICollectionView.CellRegistration<SearchHistoryCollectionViewCell, String> { cell, indexPath, value in
+        let searchHistoryCellRegistration = UICollectionView.CellRegistration<SearchHistoryCollectionViewCell, String> { cell, _, value in
             cell.titleLabel.text = value
         }
-        
+
         dataSource = UICollectionViewDiffableDataSource(
             collectionView: collectionView,
             cellProvider: { collectionView, indexPath, itemIdentifier in
-                return collectionView.dequeueConfiguredReusableCell(using: searchHistoryCellRegistration, for: indexPath, item: itemIdentifier)
-            })
+                collectionView.dequeueConfiguredReusableCell(using: searchHistoryCellRegistration, for: indexPath, item: itemIdentifier)
+            }
+        )
     }
 }
-
 
 // MARK: - UISearchBarDelegate
 
@@ -264,18 +264,17 @@ extension SearchViewController: UISearchBarDelegate {
         searchBar.text = ""
         searchBar.resignFirstResponder()
     }
-    
+
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let text = searchBar.text else { return }
         let vc = SearchResultViewController(searchWord: text)
-        self.parent?.navigationController?.pushViewController(vc, animated: true)
-        
+        parent?.navigationController?.pushViewController(vc, animated: true)
+
         searchBar.text = ""
         searchBar.resignFirstResponder()
         viewModel.saveSearchHistory(value: text)
     }
 }
-
 
 // MARK: - UICollectionViewDelegate
 
@@ -286,7 +285,7 @@ extension SearchViewController: UICollectionViewDelegate {
             return
         }
         let vc = SearchResultViewController(searchWord: searchWord)
-        self.parent?.navigationController?.pushViewController(vc, animated: true)
+        parent?.navigationController?.pushViewController(vc, animated: true)
         collectionView.deselectItem(at: indexPath, animated: true)
     }
 }

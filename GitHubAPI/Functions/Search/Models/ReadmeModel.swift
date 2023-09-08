@@ -9,7 +9,7 @@ import Foundation
 
 struct Readme: Decodable {
     let url: String
-    
+
     private enum CodingKeys: String, CodingKey {
         case url = "html_url"
     }

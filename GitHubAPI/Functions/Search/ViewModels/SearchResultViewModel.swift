@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import RxSwift
 import RxCocoa
+import RxSwift
 
 // MEMO: API接続が複数回行われないように状態を保持する
 private enum LoadStatus {
@@ -36,9 +36,9 @@ class SearchResultViewModel: SearchResultViewModelType {
     private var loadStatus: LoadStatus = .initial
     private let isLoadingRelay = PublishRelay<Bool>()
     private let repositoryManager: RepositoryManager = .init(repositoryFetchProtocol: RepositoryFetcher())
-    
+
     // MARK: - Action
-    
+
     func search(searchWord: String) {
         guard loadStatus != .fetching, loadStatus != .full else {
             // MEMO: 取得中と、すでにデータが表示されている場合は何もしない
@@ -58,7 +58,7 @@ class SearchResultViewModel: SearchResultViewModelType {
             )
             // MEMO: 結果をバインド
             switch result {
-            case .update(let value):
+            case let .update(value):
                 // MEMO: 新しく取得したデータは既存データに追加する
                 guard let repositoryList = value as? RepositoryList else { return }
                 var oldValue = searchResults.value
@@ -70,7 +70,6 @@ class SearchResultViewModel: SearchResultViewModelType {
                 loadStatus = repositoryList.items.first == nil ? .full : .loadmore
             case .doNothing:
                 loadStatus = .full
-                break
             case .retry:
                 // MEMO: 再試行ボタンを表示する
                 isLoadingRelay.accept(false)
@@ -79,13 +78,12 @@ class SearchResultViewModel: SearchResultViewModelType {
             }
         }
     }
-    
+
     func getRepository(row: Int) -> Repository {
         let value = searchResults.value
         return value[row]
     }
 }
-
 
 // MARK: - SearchResultViewModelOutputs
 
@@ -93,11 +91,11 @@ extension SearchResultViewModel: SearchResultViewModelOutputs {
     var application: Driver<[Repository]> {
         searchResults.asDriver(onErrorDriveWith: .empty())
     }
-    
+
     var retryView: Driver<Bool> {
         isRetry.asDriver(onErrorDriveWith: .empty())
     }
-    
+
     var isLoading: Driver<Bool> {
         isLoadingRelay.asDriver(onErrorDriveWith: .empty())
     }

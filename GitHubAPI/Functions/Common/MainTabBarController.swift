@@ -8,13 +8,12 @@
 import UIKit
 
 class MainTabBarController: UITabBarController {
-
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         setUpViewController()
     }
-    
+
     private func setUpViewController() {
         let searchVC = SearchViewController()
         searchVC.tabBarItem.title = "Search"

@@ -23,7 +23,7 @@ struct Repository: Hashable, Decodable {
     let forks: Int
     let starCount: Int
     let language: String?
-    
+
     private enum CodingKeys: String, CodingKey {
         case id
         case name
@@ -38,7 +38,7 @@ struct Repository: Hashable, Decodable {
 struct Owner: Hashable, Decodable {
     let login: String
     let avatarURL: String
-    
+
     private enum CodingKeys: String, CodingKey {
         case login
         case avatarURL = "avatar_url"

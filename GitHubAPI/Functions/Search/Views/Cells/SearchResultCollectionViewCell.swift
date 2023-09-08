@@ -18,33 +18,32 @@ class SearchResultCollectionViewCell: UICollectionViewCell {
     let aboutLabel = UILabel()
     let starCountLabel = UILabel()
     let languageLabel = UILabel()
-    
+
     override var isSelected: Bool {
         // MEMO: 選択時の色を変える
         didSet {
             contentView.backgroundColor = isSelected ? .systemGray6 : .systemBackground
         }
     }
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+
         setUpLayout()
     }
-    
-    required init?(coder: NSCoder) {
+
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    
+
     // MARK: - Action
-    
-    
+
     // MARK: - Layout
-    
+
     private func setUpLayout() {
-        self.contentView.backgroundColor = .systemBackground
-        
+        contentView.backgroundColor = .systemBackground
+
         setUpLargeStackView()
         setUpOwnerStackView()
         setUpOwnerImageView()
@@ -56,7 +55,7 @@ class SearchResultCollectionViewCell: UICollectionViewCell {
         setUpStarCountLabel()
         setUpLanguageLabel()
     }
-    
+
     private func setUpLargeStackView() {
         largeStackView.translatesAutoresizingMaskIntoConstraints = false
         largeStackView.addArrangedSubview(ownerStackView)
@@ -67,20 +66,20 @@ class SearchResultCollectionViewCell: UICollectionViewCell {
         largeStackView.spacing = 10
         largeStackView.alignment = .fill
         largeStackView.distribution = .fill
-        self.contentView.addSubview(largeStackView)
-        
+        contentView.addSubview(largeStackView)
+
         // MEMO: UICollectionViewCellの自動的に追加される制約とコンフリクトするため優先度を下げる
-        let bottomAnchor = largeStackView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -10)
+        let bottomAnchor = largeStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)
         bottomAnchor.priority = UILayoutPriority(999)
-        
+
         NSLayoutConstraint.activate([
-            largeStackView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 10),
-            largeStackView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 10),
-            largeStackView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -10),
-            bottomAnchor
+            largeStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            largeStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            largeStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            bottomAnchor,
         ])
     }
-    
+
     private func setUpOwnerStackView() {
         ownerStackView.translatesAutoresizingMaskIntoConstraints = false
         ownerStackView.addArrangedSubview(ownerImageView)
@@ -89,16 +88,16 @@ class SearchResultCollectionViewCell: UICollectionViewCell {
         ownerStackView.spacing = 5
         ownerStackView.alignment = .fill
         ownerStackView.distribution = .fill
-        
+
         // MEMO: UICollectionViewCellの自動的に追加される制約とコンフリクトするため優先度を下げる
         let heightAnchor = ownerStackView.heightAnchor.constraint(equalToConstant: 25)
         heightAnchor.priority = UILayoutPriority(999)
-        
+
         NSLayoutConstraint.activate([
             ownerStackView.topAnchor.constraint(equalTo: largeStackView.topAnchor),
             ownerStackView.leadingAnchor.constraint(equalTo: largeStackView.leadingAnchor),
             ownerStackView.trailingAnchor.constraint(equalTo: largeStackView.trailingAnchor),
-            heightAnchor
+            heightAnchor,
         ])
     }
 
@@ -107,31 +106,31 @@ class SearchResultCollectionViewCell: UICollectionViewCell {
         ownerImageView.layer.cornerRadius = 5
         ownerImageView.layer.masksToBounds = true
         ownerImageView.contentMode = .scaleAspectFit
-        
+
         NSLayoutConstraint.activate([
             ownerImageView.topAnchor.constraint(equalTo: ownerStackView.topAnchor),
             ownerImageView.leadingAnchor.constraint(equalTo: ownerStackView.leadingAnchor),
             ownerImageView.bottomAnchor.constraint(equalTo: ownerStackView.bottomAnchor),
-            ownerImageView.widthAnchor.constraint(equalTo: ownerImageView.heightAnchor, multiplier: 1)
+            ownerImageView.widthAnchor.constraint(equalTo: ownerImageView.heightAnchor, multiplier: 1),
         ])
     }
-    
+
     private func setUpOwnerNameLabel() {
         ownerNameLabel.textAlignment = .left
         ownerNameLabel.font = UIFont.systemFont(ofSize: 12)
     }
-    
+
     private func setUpRepositoryNameLabel() {
         repositoryNameLabel.textAlignment = .left
         repositoryNameLabel.font = UIFont.systemFont(ofSize: 16, weight: .bold)
     }
-    
+
     private func setUpAboutLabel() {
         aboutLabel.textAlignment = .left
         aboutLabel.font = UIFont.systemFont(ofSize: 16)
         aboutLabel.numberOfLines = 0
     }
-    
+
     private func setUpMediumStackView() {
         mediumStackView.addArrangedSubview(starStackView)
         mediumStackView.addArrangedSubview(languageLabel)
@@ -139,19 +138,19 @@ class SearchResultCollectionViewCell: UICollectionViewCell {
         mediumStackView.spacing = 10
         mediumStackView.alignment = .leading
         mediumStackView.distribution = .fill
-        
+
         // MEMO: UICollectionViewCellの自動的に追加される制約とコンフリクトするため優先度を下げる
         let heightAnchor = mediumStackView.heightAnchor.constraint(equalToConstant: 20)
         heightAnchor.priority = UILayoutPriority(999)
-        
+
         NSLayoutConstraint.activate([
             mediumStackView.leadingAnchor.constraint(equalTo: largeStackView.leadingAnchor),
             mediumStackView.trailingAnchor.constraint(equalTo: largeStackView.trailingAnchor),
             mediumStackView.bottomAnchor.constraint(equalTo: largeStackView.bottomAnchor),
-            heightAnchor
+            heightAnchor,
         ])
     }
-    
+
     private func setUpStarStackView() {
         let starImageView = UIImageView(image: UIImage(systemName: "star"))
         starImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -162,27 +161,26 @@ class SearchResultCollectionViewCell: UICollectionViewCell {
         starStackView.spacing = 5
         starStackView.alignment = .leading
         starStackView.distribution = .fill
-        
+
         // ImageViewの配置
         NSLayoutConstraint.activate([
             starImageView.topAnchor.constraint(equalTo: starStackView.topAnchor),
             starImageView.leadingAnchor.constraint(equalTo: starStackView.leadingAnchor),
             starImageView.bottomAnchor.constraint(equalTo: starStackView.bottomAnchor),
-            starImageView.widthAnchor.constraint(equalTo: starImageView.heightAnchor, multiplier: 1)
+            starImageView.widthAnchor.constraint(equalTo: starImageView.heightAnchor, multiplier: 1),
         ])
     }
-    
+
     private func setUpStarCountLabel() {
         starCountLabel.textAlignment = .left
         starCountLabel.font = UIFont.systemFont(ofSize: 16)
         starCountLabel.textColor = .systemGray
         starCountLabel.setContentHuggingPriority(.required, for: .horizontal)
     }
-    
+
     private func setUpLanguageLabel() {
         languageLabel.textAlignment = .left
         languageLabel.font = UIFont.systemFont(ofSize: 16)
         languageLabel.textColor = .systemGray
     }
-    
 }

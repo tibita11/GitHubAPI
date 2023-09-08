@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import RxSwift
 import RxCocoa
+import RxSwift
 
 protocol RepositoryDetailViewModelOutput {
     var urlDriver: Driver<String> { get }
@@ -25,15 +25,15 @@ class RepositoryDetailViewModel: RepositoryDetailViewModelType {
     private let isLoadingRelay = PublishRelay<Bool>()
     private let isWarnigRelay = PublishRelay<Bool>()
     private let readmeManager = ReadmeManager(readmeFetchProtocol: ReadmeFetcher())
-    
+
     func getReadme(owner: String, repo: String) {
         isLoadingRelay.accept(true)
-        
+
         Task {
             let result = await readmeManager.getAPIResult(owner: owner, repo: repo)
             // MEMO: 結果をバインド
             switch result {
-            case .update(let value):
+            case let .update(value):
                 guard let readme = value as? Readme else {
                     assertionFailure("取得した値がReadme型に変換できませんでした。")
                     return
@@ -49,18 +49,17 @@ class RepositoryDetailViewModel: RepositoryDetailViewModelType {
     }
 }
 
-
 // MARK: - RepositoryDetailViewModelOutput
 
 extension RepositoryDetailViewModel: RepositoryDetailViewModelOutput {
     var urlDriver: Driver<String> {
         urlRelay.asDriver(onErrorDriveWith: .empty())
     }
-    
+
     var isLoading: Driver<Bool> {
         isLoadingRelay.asDriver(onErrorDriveWith: .empty())
     }
-    
+
     var isWarnig: Driver<Bool> {
         isWarnigRelay.asDriver(onErrorDriveWith: .empty())
     }
