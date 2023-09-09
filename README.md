@@ -13,6 +13,10 @@
 ・RxCocoa
 
 ・Kingfisher
+
+・SwiftFormat
+
+・SwiftLint
 ## 3. 使用している技術
 ### ・RxSwift
 
@@ -68,6 +72,9 @@ scrollViewDidScrollは頻繁に呼び出されるため、APIの呼び出し状�
 
 画像の取得時には、キャッシュを活用して通信処理の頻度を低減させました。
 Kingfisherを選択したのは、その実績と使い勝手の良さによるものです。
+
+### ・SwiftFormat、SwiftLint
+自分のコードの書き癖がチームでの開発に障害を与えると考え、SwiftFormatとSwiftLintを導入し、それによって修正を受けるようにしました。
 ## 4. テストコードについて
 ### ・UserDefaults
 
