@@ -7,15 +7,6 @@
 
 import Foundation
 
-enum APIError: LocalizedError {
-    case decodeFailed
-    case validationFailed
-    case notModified
-    case serviceUnavailable
-    case unknownError
-    case resurceNotFound
-}
-
 protocol APIRequestManagerProtocol {
     func handleSessionTask<T: Decodable>(_ dataType: T.Type, request: URLRequest) async throws -> T
 }
