@@ -8,11 +8,6 @@
 import UIKit
 
 enum Const {
-    // Font
-    static let titleFont = UIFont.systemFont(ofSize: 20, weight: .bold)
-    static let textFont = UIFont.systemFont(ofSize: 16)
-    static let smallTextFont = UIFont.systemFont(ofSize: 12)
-
     // UserDefaultKey
     static let searchHistoryKey = "searchHistory"
 }
