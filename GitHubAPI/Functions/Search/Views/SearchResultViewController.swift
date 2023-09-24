@@ -196,7 +196,7 @@ class SearchResultViewController: UIViewController {
         // MEMO: View中央の文言を設定する
         let label = UILabel()
         label.text = "No repository"
-        label.font = Const.titleFont
+        label.font = .titleFont
         label.translatesAutoresizingMaskIntoConstraints = false
         noDataWarnigView.addSubview(label)
 
@@ -225,7 +225,7 @@ class SearchResultViewController: UIViewController {
         let label = UILabel()
         label.text = "問題が発生しました"
         label.textAlignment = .center
-        label.font = Const.titleFont
+        label.font = .titleFont
         // MEMO: View中央の再試行ボタンを設定する
         let button = UIButton(configuration: .tinted())
         button.setTitle("やり直す", for: .normal)

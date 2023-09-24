@@ -140,7 +140,7 @@ class SearchViewController: UIViewController {
         clearButton.setTitle("Clear", for: .normal)
         clearButton.addTarget(self, action: #selector(tapClearButton), for: .touchUpInside)
         clearButton.setTitleColor(UIColor.tintColor, for: .normal)
-        clearButton.titleLabel?.font = Const.textFont
+        clearButton.titleLabel?.font = .textFont
         clearButton.translatesAutoresizingMaskIntoConstraints = false
         searchHistoryCollectionHeaderView.addSubview(clearButton)
 
@@ -153,7 +153,7 @@ class SearchViewController: UIViewController {
         // ラベル設定
         let label = UILabel()
         label.text = "Recent searches"
-        label.font = Const.titleFont
+        label.font = .titleFont
         label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         searchHistoryCollectionHeaderView.addSubview(label)
@@ -180,10 +180,10 @@ class SearchViewController: UIViewController {
         // ラベル設定
         let titleLabel = UILabel()
         titleLabel.text = "Let's search!"
-        titleLabel.font = Const.titleFont
+        titleLabel.font = .titleFont
         let textLabel = UILabel()
         textLabel.text = "You can search the repository."
-        textLabel.font = Const.textFont
+        textLabel.font = .textFont
         // ラベルをまとめる
         let stackView = UIStackView()
         stackView.axis = .vertical

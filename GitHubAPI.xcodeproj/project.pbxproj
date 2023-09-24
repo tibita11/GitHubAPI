@@ -37,6 +37,7 @@
 		A5898EDB2A87C2F40033BA86 /* Const.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5898EDA2A87C2F40033BA86 /* Const.swift */; };
 		A5898EE02A887F990033BA86 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5898EDF2A887F990033BA86 /* SearchViewModel.swift */; };
 		A5A98B802AC022B200EBC0F8 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A98B7F2AC022B200EBC0F8 /* APIError.swift */; };
+		A5A98B822AC0400A00EBC0F8 /* UIFont+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A98B812AC0400A00EBC0F8 /* UIFont+Extension.swift */; };
 		CD4D866730EE3DC7A86CC318 /* Pods_GitHubAPITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DCE172263210BFA7889F840 /* Pods_GitHubAPITests.framework */; };
 /* End PBXBuildFile section */
 
@@ -96,6 +97,7 @@
 		A5898EDA2A87C2F40033BA86 /* Const.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Const.swift; sourceTree = "<group>"; };
 		A5898EDF2A887F990033BA86 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		A5A98B7F2AC022B200EBC0F8 /* APIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
+		A5A98B812AC0400A00EBC0F8 /* UIFont+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Extension.swift"; sourceTree = "<group>"; };
 		AF98C81ED8AAC9B08A247DF7 /* Pods-GitHubAPITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GitHubAPITests.debug.xcconfig"; path = "Target Support Files/Pods-GitHubAPITests/Pods-GitHubAPITests.debug.xcconfig"; sourceTree = "<group>"; };
 		B787B67C916F8CC5BB32A401 /* Pods-GitHubAPI.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GitHubAPI.debug.xcconfig"; path = "Target Support Files/Pods-GitHubAPI/Pods-GitHubAPI.debug.xcconfig"; sourceTree = "<group>"; };
 		C13F82909799A4C590B89ADE /* Pods-GitHubAPI-GitHubAPIUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GitHubAPI-GitHubAPIUITests.release.xcconfig"; path = "Target Support Files/Pods-GitHubAPI-GitHubAPIUITests/Pods-GitHubAPI-GitHubAPIUITests.release.xcconfig"; sourceTree = "<group>"; };
@@ -241,6 +243,7 @@
 			children = (
 				A5898EDA2A87C2F40033BA86 /* Const.swift */,
 				A5898ED62A876C3D0033BA86 /* MainTabBarController.swift */,
+				A5A98B812AC0400A00EBC0F8 /* UIFont+Extension.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -555,6 +558,7 @@
 				A5832AB82A8E5F2C005C5A89 /* RepositoryModel.swift in Sources */,
 				A5669FAC2AA0AB0F008CA1E4 /* ReadmeManager.swift in Sources */,
 				A57E7D942A89F16F00F13FF9 /* SearchHistoryCollectionViewCell.swift in Sources */,
+				A5A98B822AC0400A00EBC0F8 /* UIFont+Extension.swift in Sources */,
 				A5832AB22A8BC733005C5A89 /* SearchResultCollectionViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

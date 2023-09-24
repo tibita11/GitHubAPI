@@ -192,20 +192,20 @@ class RepositoryDetailViewController: UIViewController {
     private func setUpOwnerNameLabel() {
         ownerNameLabel.text = repository.owner.login
         ownerNameLabel.textAlignment = .left
-        ownerNameLabel.font = Const.smallTextFont
+        ownerNameLabel.font = .smallTextFont
     }
 
     private func setUpRepositoryNameLabel() {
         repositoryNameLabel.text = repository.name
         repositoryNameLabel.textAlignment = .left
-        repositoryNameLabel.font = Const.titleFont
+        repositoryNameLabel.font = .titleFont
     }
 
     private func setUpDescriptionLabel() {
         descriptionLabel.text = repository.description
         descriptionLabel.textAlignment = .left
         descriptionLabel.numberOfLines = 0
-        descriptionLabel.font = Const.textFont
+        descriptionLabel.font = .textFont
     }
 
     private func setUpCountStackView() {
@@ -232,7 +232,7 @@ class RepositoryDetailViewController: UIViewController {
         starCountLabel.text = String(repository.starCount)
         starCountLabel.textColor = .systemGray
         starCountLabel.textAlignment = .left
-        starCountLabel.font = Const.textFont
+        starCountLabel.font = .textFont
         starCountLabel.setContentHuggingPriority(.required, for: .horizontal)
 
         starStackView.addArrangedSubview(imageView)
@@ -259,7 +259,7 @@ class RepositoryDetailViewController: UIViewController {
         forkCountLabel.text = String(repository.forks)
         forkCountLabel.textColor = .systemGray
         forkCountLabel.textAlignment = .left
-        forkCountLabel.font = Const.textFont
+        forkCountLabel.font = .textFont
 
         forkStackView.addArrangedSubview(imageView)
         forkStackView.addArrangedSubview(forkCountLabel)
@@ -281,7 +281,7 @@ class RepositoryDetailViewController: UIViewController {
         label.text = "README"
         label.textAlignment = .left
         label.textColor = .systemGray
-        label.font = Const.textFont
+        label.font = .textFont
         label.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(label)
 
@@ -319,7 +319,7 @@ class RepositoryDetailViewController: UIViewController {
 
     private func setUpWarningLabel() {
         warningLabel.text = "問題が発生しました"
-        warningLabel.font = Const.titleFont
+        warningLabel.font = .titleFont
         warningLabel.isHidden = true
         warningLabel.translatesAutoresizingMaskIntoConstraints = false
         webView.addSubview(warningLabel)
